@@ -1,0 +1,9 @@
+{
+  "source_sha_verified": true,
+  "passenger_filter_verified": true,
+  "train_validation_test_groups_disjoint": true,
+  "saved_ann_metrics_recomputed": true,
+  "streamlit_form_and_report_tests_passed": true,
+  "desktop_browser_prediction_passed": true,
+  "mobile_page_overflow": false
+}

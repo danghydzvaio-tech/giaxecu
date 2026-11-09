@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "sha256": {
+    "ann_bundle.joblib": "18c64df0f68d0cf13612b9272b508b6d6f134e11d991c2950096ab4b851b6432",
+    "evaluation.json": "06bf741acd3de74fcd798831e880bfee90c185bbb1fba941947b5caff105d1b0",
+    "reference.csv": "b980cf720bb31732df0501e5f04cf4cd40d300c60ba40ba1bcd4ed5078df2b00",
+    "training_history.csv": "f17b87f7f05baa57dd7bfe8e066825094789fd9a2ef361b4a773f52e4002b233",
+    "holdout_predictions.csv": "c2b1fd9ab974c79a31ba286cc21bce7865847a8ee0652dd13715f7631015c592",
+    "split_indices.npz": "b3b37227a3ea23cacdf182b7a63138312bb9eb82931843ede7adfd91d50b57a6"
+  }
+}

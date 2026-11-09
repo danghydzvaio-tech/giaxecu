@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.streamlit/secrets.toml
+*.csv
+*.pkl
+*.joblib
+*.zip
+# Versioned, trusted model and its public-source evaluation/reference artifacts:
+!artifacts/ann_bundle.joblib
+!artifacts/reference.csv
+!artifacts/training_history.csv
+!artifacts/holdout_predictions.csv

@@ -1,0 +1,82 @@
+[
+  {
+    "inputs": {
+      "brand": "maruti",
+      "name": "maruti swift vxi bsiii",
+      "year": 2007,
+      "km_driven": 120000,
+      "fuel": "petrol",
+      "transmission": "manual",
+      "owner": "first owner",
+      "seller_type": "individual",
+      "engine_cc": 1298,
+      "power_bhp": 88.2,
+      "seats": 5.0
+    },
+    "expected_prediction_inr": 148035.5807668111
+  },
+  {
+    "inputs": {
+      "brand": "honda",
+      "name": "honda city i vtec vx",
+      "year": 2018,
+      "km_driven": 28900,
+      "fuel": "petrol",
+      "transmission": "manual",
+      "owner": "first owner",
+      "seller_type": "dealer",
+      "engine_cc": 1497,
+      "power_bhp": 117.3,
+      "seats": 5.0
+    },
+    "expected_prediction_inr": 972563.6137888905
+  },
+  {
+    "inputs": {
+      "brand": "hyundai",
+      "name": "hyundai verna vtvt 1.6 sx option",
+      "year": 2019,
+      "km_driven": 5000,
+      "fuel": "petrol",
+      "transmission": "manual",
+      "owner": "first owner",
+      "seller_type": "individual",
+      "engine_cc": 1591,
+      "power_bhp": 121.3,
+      "seats": 5.0
+    },
+    "expected_prediction_inr": 972093.8097775995
+  },
+  {
+    "inputs": {
+      "brand": "toyota",
+      "name": "toyota etios vxd",
+      "year": 2011,
+      "km_driven": 90000,
+      "fuel": "diesel",
+      "transmission": "manual",
+      "owner": "first owner",
+      "seller_type": "individual",
+      "engine_cc": 1364,
+      "power_bhp": 67.1,
+      "seats": 5.0
+    },
+    "expected_prediction_inr": 352949.93032410153
+  },
+  {
+    "inputs": {
+      "brand": "ford",
+      "name": "ford freestyle titanium petrol bsiv",
+      "year": 2020,
+      "km_driven": 5000,
+      "fuel": "petrol",
+      "transmission": "manual",
+      "owner": "second owner",
+      "seller_type": "individual",
+      "engine_cc": 1194,
+      "power_bhp": 94.68,
+      "seats": 5.0
+    },
+    "expected_prediction_inr": 645749.9541216352
+  }
+]
