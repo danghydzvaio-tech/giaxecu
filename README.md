@@ -67,6 +67,9 @@ Website giữ luồng nhập liệu → kết quả. Công thức, bảng huấn
 
 ```text
 app.py                         # Giao diện Streamlit; chọn tệp này khi deploy
+index.html                     # Template hero/header/footer, không thay app.py
+style.css                      # Hệ thống thiết kế và responsive
+script.js                      # GSAP/ScrollTrigger/Lenis và tương tác
 service.py                     # Nạp tài nguyên, kiểm tra đầu vào, gọi ANN
 car_model.py                   # Làm sạch dữ liệu và preprocessing/inference
 train.py                       # Tải Kaggle v4 và huấn luyện lại
@@ -160,3 +163,18 @@ python -m unittest discover -s tests -v
 ## Nguồn và giấy phép
 
 Tác giả dữ liệu: Nehal Birla. Các CSV tham chiếu/kiểm tra là trích xuất và biến đổi từ nguồn Kaggle. Xem `DATA_SOURCE.md` cho ghi công, ODbL và Database Contents License. Không đưa PDF tham khảo, ảnh chụp hội thoại hoặc file Excel của người dùng vào kho công khai.
+
+
+## Giao diện và chuyển động
+
+Giữ ứng dụng Streamlit và toàn bộ biểu mẫu/kết quả hiện có. Ba tệp `index.html`, `style.css`, `script.js` ở gốc được `app.py` nạp làm lớp giao diện. **Không chọn index.html làm main file trên Streamlit.** Mở riêng HTML chỉ xem được phần khung; chức năng dự đoán vẫn cần chạy `streamlit run app.py`.
+
+- Header cố định có nền kính mờ, ẩn/hiện theo hướng cuộn; menu điện thoại hỗ trợ Escape và giữ focus.
+- Hero có minh họa SVG tự tạo, chữ xuất hiện theo dòng, parallax và nút magnetic trên chuột desktop.
+- GSAP 3.12.5, ScrollTrigger và Lenis 1.3.4 nạp qua jsDelivr; Google Fonts có font fallback.
+- Có thanh tiến trình cuộn, loader ngắn, nút về đầu, hiệu ứng thẻ giá, floating labels và trạng thái gửi form.
+- `prefers-reduced-motion` tắt Lenis, loader và các animation; CDN lỗi thì biểu mẫu và dự đoán vẫn chạy.
+- Python/ANN, dữ liệu, số liệu đánh giá, tải CSV và bảng đối chiếu được giữ nguyên. Không thêm liên hệ hoặc đối tác không có dữ liệu.
+- JavaScript chỉ là mã giao diện tin cậy trong kho. Bootstrap dùng HTML component cùng origin của Streamlit để nạp mã, vì một số frontend Streamlit lọc script trong `st.html`.
+
+Đã kiểm tra luồng dự đoán, giá trị đầu ra và CSV trên trình duyệt ở desktop, tablet, điện thoại, chế độ giảm chuyển động và khi CDN bị chặn. Không công bố điểm Lighthouse vì chưa đo Lighthouse trước/sau trong cùng điều kiện.

@@ -15,7 +15,7 @@ Thứ tự: giới thiệu ngắn → chọn hãng/phiên bản/cấu hình → 
 
 ## 3. Chữ và hình ảnh
 
-Dùng font sans-serif có dấu tiếng Việt từ hệ thống/Streamlit. Không bắt buộc tải font ngoài. Giá lớn, đơn vị rõ ràng. Không dùng ảnh xe chưa có quyền sử dụng, không thêm ảnh trang trí chiếm diện tích biểu mẫu. Bố cục hai/ba cột trên máy tính, xếp dọc trên điện thoại.
+Dùng Plus Jakarta Sans cho nội dung và Space Grotesk cho tiêu đề qua Google Fonts; luôn có font sans-serif fallback khi mạng chậm hoặc bị chặn. Giá lớn, đơn vị rõ ràng. Hero dùng minh họa SVG tự tạo; không lấy ảnh xe chưa có quyền sử dụng, không để hình trang trí chiếm diện tích biểu mẫu. Bố cục hai/ba cột trên máy tính, xếp dọc trên điện thoại.
 
 ## 4. Công nghệ
 
