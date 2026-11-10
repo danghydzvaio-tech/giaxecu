@@ -39,7 +39,6 @@ Bản này tiếp tục dùng Streamlit và ANN hiện có. `app.py` trong kho �
     <p class="av-eyebrow">AUTOVALUE INDIA <span aria-hidden="true">/</span> ẤN ĐỘ · INR (₹)</p>
     <h1 aria-label="Định giá ô tô cũ bằng thuật toán AI"><span class="av-mask"><span class="av-title-line">Định giá ô tô cũ</span></span>
       <span class="av-mask"><span class="av-title-line">bằng thuật toán <em>AI</em></span></span></h1>
-    <p class="av-lead">Chọn xe, nhập thông tin và nhận giá tham khảo bằng rupee Ấn Độ.</p>
     <a href="#prediction" class="av-cta av-magnetic">Dự đoán giá xe <span aria-hidden="true">↗</span></a>
   </div>
   <div class="av-art" aria-hidden="true" data-interactive-car>
