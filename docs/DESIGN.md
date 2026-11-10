@@ -33,3 +33,10 @@ Mô hình, preprocessing và target scaler được lưu cùng nhau để tránh
 - Kiểm tra mô hình đã lưu, chỉ số báo cáo và luồng giao diện; tự chạy kiểm tra khi push.
 
 Tài liệu PDF về ANN/GPA được tham khảo để hiểu thuật toán. Không dùng dữ liệu GPA, trọng số hoặc bảng loss trong PDF cho mô hình giá xe. Không yêu cầu người dùng xem các công thức trên web.
+
+
+## Creative studio
+
+Bản mới bổ sung nền studio ivory, serif Cormorant Garamond và vùng dữ liệu teal đậm. Nội dung ban đầu, bộ mô hình, thông số, liên kết và luồng nhập xe → kết quả → CSV được giữ. Các hiệu ứng không tạo số liệu marketing: hai góc hero dùng số mẫu train-clean/test thật; danh sách dùng giá nguồn lịch sử có ghi chú minh họa SVG.
+
+Các hiệu ứng dùng transform/opacity/filter; nền gallery là các lớp màu tĩnh crossfade opacity. Pin chỉ áp dụng hero do HTML sở hữu. Reduced motion bỏ pin, Lenis và các vòng lặp sway; CDN bị chặn vẫn dùng được biểu mẫu và mở dòng xe.

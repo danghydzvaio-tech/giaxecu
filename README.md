@@ -178,3 +178,20 @@ Giữ ứng dụng Streamlit và toàn bộ biểu mẫu/kết quả hiện có.
 - JavaScript chỉ là mã giao diện tin cậy trong kho. Bootstrap dùng HTML component cùng origin của Streamlit để nạp mã, vì một số frontend Streamlit lọc script trong `st.html`.
 
 Đã kiểm tra luồng dự đoán, giá trị đầu ra và CSV trên trình duyệt ở desktop, tablet, điện thoại, chế độ giảm chuyển động và khi CDN bị chặn. Không công bố điểm Lighthouse vì chưa đo Lighthouse trước/sau trong cùng điều kiện.
+
+
+## Creative motion — bản nâng cấp
+
+Giữ Streamlit và ANN hiện có. Không có ảnh hoặc tài nguyên sao chép từ template tham khảo.
+
+1. Hero nền studio sáng, chữ Cormorant Garamond serif. `Intl.Segmenter` tách grapheme tiếng Việt; glyph thẳng/italic chồng nhau và chuyển opacity trong khung có chiều rộng cố định. H1 giữ aria-label đầy đủ. Menu pill kính mờ có nền active di chuyển.
+2. Tám sprite SVG tự vẽ nở theo quãng đường con trỏ quanh xe, thu sau khi rời vùng 2 giây; gió dừng khi ngoài viewport hoặc tab ẩn. Thiết bị cảm ứng kích hoạt theo cuộn; reduced motion hiển thị tĩnh.
+3. ScrollTrigger pin riêng hero HTML do ứng dụng sở hữu, nền teal bo góc 32px của phần tiếp theo phủ lên khi cuộn. Không pin/reparent biểu mẫu hoặc DOM do React của Streamlit quản lý.
+4. Sáu dòng xe được lấy trực tiếp từ tập train: giá nguồn lịch sử, không phải giá ANN hay tin đang bán. Nền chuyển bằng lớp màu opacity; ảnh minh họa đổi bằng overflow-hidden + translate thay clip-path. Trên điện thoại hoặc bàn phím, chọn dòng để mở ảnh/mô tả.
+
+Hai số liệu hero là số mẫu sau làm sạch và số mẫu test từ metadata mô hình, không phải khách hàng hoặc mức hài lòng. SVG xe và 8 sprite đã nhúng trong `index.html`; không cần chuẩn bị ảnh. Xe dùng viewBox 680×330; sprite 80×100, nền trong suốt. Nếu thay bằng ảnh riêng có quyền sử dụng, gợi ý WebP 1600×900 và sprite SVG/PNG 160×200 trong suốt; đổi phần nguồn ảnh tương ứng trong template.
+
+Các bộ mã hoàn chỉnh nằm ở `index.html`, `style.css`, `script.js`; `app.py` nạp chúng vào Streamlit và xử lý dữ liệu/dự đoán. Mở riêng index.html chỉ xem khung hero/footer, không thay cho `streamlit run app.py`.
+
+
+Full code giao diện theo thứ tự index.html → style.css → script.js: [docs/FRONTEND_FULL_CODE.md](docs/FRONTEND_FULL_CODE.md).
