@@ -10,10 +10,22 @@ import pandas as pd
 import streamlit as st
 
 from service import load_assets, predict_vehicle
-from photo_catalog import load_catalog, reference_car, embedded_photo_url, photo_for_car
+from photo_catalog import load_catalog, reference_car, photo_for_car
 
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title='AutoValue India · Giá xe cũ', page_icon='🚗', layout='wide')
+
+
+@st.cache_data(show_spinner=False, max_entries=16)
+def embedded_photo_url(photo):
+    # Keep this in the entrypoint: Cloud hot updates can retain older imported modules.
+    filename = photo['filename']
+    if Path(filename).name != filename:
+        raise ValueError('Tên tệp ảnh không hợp lệ.')
+    payload = (ROOT / 'static/cars' / filename).read_bytes()
+    return 'data:image/webp;base64,' + base64.b64encode(payload).decode('ascii')
+
+
 def fragment(name):
     document = (ROOT / 'index.html').read_text(encoding='utf-8')
     content = re.search(rf'<!-- av:{name} -->(.*?)<!-- /av:{name} -->', document, re.S).group(1)
