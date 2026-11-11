@@ -111,7 +111,7 @@ def load_css():
     @keyframes float{50%{transform:translateY(-6px)}}@keyframes drift{to{transform:translate(70px,90px)}}
     @media(max-width:760px){.block-container{padding:1.2rem 1rem}.hero{grid-template-columns:1fr;padding:24px;gap:24px}.hero h1{font-size:36px}.hero-image img{height:200px;aspect-ratio:16/9}.brandbar{font-size:10px}.brandbar span{font-size:9px}.st-key-input-card,.st-key-result-card,.st-key-reference-card,.st-key-about-card{padding:20px}.mini-grid{grid-template-columns:1fr}.mini-card{padding:16px}.mini-card strong{font-size:22px}[data-baseweb="tab-list"]{gap:14px}.price{font-size:clamp(38px,10vw,60px)}.estimate{padding:18px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-    ''' + (ROOT / 'ui_effects.css').read_text(encoding='utf-8') + '</style>', unsafe_allow_html=True)
+    ''' + (ROOT / 'ui_effects.css').read_text(encoding='utf-8') + (ROOT / 'navbar.css').read_text(encoding='utf-8') + '</style>', unsafe_allow_html=True)
 
 
 def money(value):
@@ -167,7 +167,7 @@ def show_sample_gallery(reference):
 
 
 load_css()
-st.markdown('<div class="brandbar"><div><b class="brand-dot">◈</b> AUTOVALUE INDIA</div><span>ẤN ĐỘ · INR (₹)</span></div>', unsafe_allow_html=True)
+st.markdown((ROOT / 'navbar.html').read_text(encoding='utf-8'), unsafe_allow_html=True)
 image = hero_photo()
 art = ('<figure class="hero-image"><img src="' + image + '" alt="Cận cảnh xe BMW màu đen" width="2912" height="1632">'
        '<figcaption>Ảnh minh họa · <a href="https://vi.pngtree.com/freebackground/black-bmw-car-in-close-up-photo-photo_15181512.html" target="_blank" rel="noopener noreferrer">Pngtree</a></figcaption></figure>') if image else ''
@@ -188,9 +188,7 @@ FUEL_LABELS = {'petrol': 'Xăng', 'diesel': 'Dầu diesel', 'cng': 'Khí CNG', '
 GEAR_LABELS = {'manual': 'Số sàn', 'automatic': 'Số tự động'}
 OWNER_LABELS = {'first owner': 'Chủ thứ nhất', 'second owner': 'Chủ thứ hai', 'third owner': 'Chủ thứ ba', 'fourth & above owner': 'Chủ thứ tư trở lên', 'test drive car': 'Xe chạy thử'}
 SELLER_LABELS = {'individual': 'Cá nhân', 'dealer': 'Đại lý', 'trustmark dealer': 'Đại lý Trustmark'}
-valuation, market, about = st.tabs(['🚘 Định giá', '📊 Dữ liệu tham chiếu', 'ℹ️ Giới thiệu'])
-
-with valuation:
+with st.container(key='valuation-section'):
     with st.container(key='input-card'):
         st.markdown('<p class="section-kicker">01 / THÔNG TIN CHIẾC XE</p>', unsafe_allow_html=True)
         st.subheader('Bắt đầu với chiếc xe của bạn')
@@ -273,7 +271,7 @@ with valuation:
                 st.dataframe(examples.sort_values('distance').head(5)[['year', 'km_driven', 'selling_price']].rename(columns={'year': 'Năm', 'km_driven': 'Số km', 'selling_price': 'Giá nguồn (₹)'}), hide_index=True, width='stretch')
                 st.caption('Bản ghi lịch sử từ tập huấn luyện, không phải tin rao đang bán.')
 
-with market:
+with st.container(key='reference-section'):
     with st.container(key='reference-card'):
         st.markdown('<p class="section-kicker">GÓC NHÌN TỪ DỮ LIỆU LỊCH SỬ</p>', unsafe_allow_html=True)
         st.subheader('Hiểu dữ liệu trước khi đọc mức giá')
@@ -293,7 +291,7 @@ with market:
         st.bar_chart(fuels, x='Nhiên liệu', y='Số mẫu', horizontal=True, color=PALETTE['cream'], height=240)
         st.caption('Biểu đồ mô tả dữ liệu. Không thể suy ra mức ảnh hưởng riêng của nhiên liệu lên giá từ số mẫu này.')
 
-with about:
+with st.container(key='about-section'):
     with st.container(key='about-card'):
         st.markdown('<p class="section-kicker">MINH BẠCH VỀ PHẠM VI SỬ DỤNG</p>', unsafe_allow_html=True)
         st.subheader('AI hỗ trợ tham khảo. Bạn quyết định.')
@@ -306,5 +304,5 @@ with about:
 st.markdown('<div class="page-footer"><span class="founder-credit">Người sáng lập: Trần Đăng Huy</span><span><a href="https://github.com/danghydzvaio-tech/giaxecu" target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Giá trị tham khảo từ dữ liệu lịch sử</span></div>', unsafe_allow_html=True)
 
 # Run our own JavaScript in the app document, including after Streamlit reruns.
-effects = json.dumps((ROOT / 'ui_effects.js').read_text(encoding='utf-8')).replace('</', '<\\/')
-components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-1"){p.__avGlass.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);}</script>', height=0, scrolling=False)
+effects = json.dumps((ROOT / 'ui_effects.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'navbar.js').read_text(encoding='utf-8')).replace('</', '<\\/')
+components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-1"&&p.__avNav?.version==="nav-1"){p.__avGlass.refresh();p.__avNav.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);}</script>', height=0, scrolling=False)
