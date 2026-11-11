@@ -207,5 +207,12 @@ Giao diện dùng đúng bảng màu mẫu: **#171717** (đen), **#88F9C0** (min
 - `photo_catalog.py` ghép ảnh với tên xe/năm/bản ghi train; không gán ngẫu nhiên ảnh cho mẫu xe chưa xác minh. Khi có ảnh phù hợp, mục đối chiếu kết quả cũng hiển thị ảnh đó.
 - `static/cars/catalog.json`: tên ảnh, mẫu/năm tham chiếu, giá nguồn thực tế, SHA-256, tác giả và license.
 - `static/cars/*.webp`: sáu ảnh tối ưu kích thước. Giữ chúng trong kho, không hotlink từ site ngoài.
-- `.streamlit/config.toml` có `server.enableStaticServing = true`; URL ảnh là `/app/static/cars/...`. Cần **Reboot app** sau khi cập nhật cấu hình theme/static serving.
+- Ảnh được đọc từ tệp và nhúng dưới dạng data:image/webp trong HTML. Một registry riêng giữ mỗi ảnh một lần; JavaScript dùng lại cho ảnh lớn/preview. Không phụ thuộc `/app/static/`, proxy prefix hoặc cấu hình static serving.
 - Xem [nguồn và giấy phép ảnh](docs/IMAGE_CREDITS.md). Bộ mô hình ANN và artifact đánh giá không thay đổi.
+
+
+## Sửa lỗi ảnh trên Streamlit Cloud
+
+Cloud hiển thị ứng dụng trong khung URL `/~/+/`. URL cũ bắt đầu `/app/static/` trỏ ra trang vỏ ngoài: phản hồi200 nhưng là text/html thay vì image/webp. Không phải ảnh trong kho bị hỏng.
+
+Bản sửa dùng `embedded_photo_url` có cache để đọc đúng byte WebP đã kiểm chứng. Hero có ảnh nhúng trực tiếp; năm ảnh còn lại nằm trong registry ẩn duy nhất và được gắn vào các vị trí gallery/preview trước khi tải GSAP/Lenis. Cách này hoạt động với static serving tắt, baseUrlPath khác rỗng và không có CDN; không hotlink hay gán ảnh xe ngẫu nhiên.

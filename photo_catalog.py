@@ -1,6 +1,7 @@
 """Verified local car photos and exact gallery-to-training-row matching."""
 from functools import lru_cache
 import json
+import base64
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -32,3 +33,16 @@ def photo_for_car(name, year):
 def public_photo_url(photo, base_path=''):
     prefix = '/' + base_path.strip('/') if base_path.strip('/') else ''
     return prefix + '/app/static/cars/' + photo['filename']
+
+
+@lru_cache(maxsize=16)
+def _embedded_photo(filename):
+    if Path(filename).name != filename:
+        raise ValueError('Tên tệp ảnh không hợp lệ.')
+    payload = (ROOT / 'static/cars' / filename).read_bytes()
+    return 'data:image/webp;base64,' + base64.b64encode(payload).decode('ascii')
+
+
+def embedded_photo_url(photo):
+    """Embed verified repository bytes; no static route/proxy/CDN dependency."""
+    return _embedded_photo(photo['filename'])

@@ -325,7 +325,7 @@ body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
 ```javascript
 (() => {
   'use strict';
-  const VERSION = 'photo-4';
+  const VERSION = 'photo-inline-5';
   if (window.__avMotion) {
     if (window.__avMotion.version === VERSION) window.__avMotion.refresh();
     else window.location.reload();
@@ -340,7 +340,22 @@ body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
   const scrollY = () => isDocument ? window.scrollY : scroller.scrollTop;
   const motion = () => !reduced.matches;
   const desktop = () => fine.matches && innerWidth > 1000;
-  const seen = new WeakSet(), counters = new Map();
+  const seen = new WeakSet(), counters = new Map(), photoSources = new Map();
+  function hydratePhotos() {
+    $$('[data-photo-key][data-photo-src]').forEach(el => photoSources.set(el.dataset.photoKey, el.dataset.photoSrc));
+    $$('img.av-car-photo[data-photo-id]').forEach(el => {
+      const src = el.getAttribute('src') || '';
+      if (src.startsWith('data:image/')) photoSources.set(el.dataset.photoId, src);
+    });
+    $$('img[data-photo-id]').forEach(el => {
+      const src = photoSources.get(el.dataset.photoId);
+      if (src && el.getAttribute('src') !== src) el.src = src;
+    });
+    $$('.av-collection-row[data-photo-id]').forEach(el => {
+      const src = photoSources.get(el.dataset.photoId);
+      if (src && el.dataset.image !== src) el.dataset.image = src;
+    });
+  }
   const state = {hero:null, collection:null, chars:[], pointer:null, sprites:[], winds:[], distance:0, lastPoint:null, insideCar:false, selected:-1, previewSlot:0, pointerQueued:false};
   let gsap, lenis, ticker, heroContext, listContext, resetTimer, refreshTimer, resizeTimer;
   let open = false, lastY = scrollY(), loaded = 0;
@@ -484,7 +499,7 @@ body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
     if(state.previewIndex!==index){
       state.previewIndex=index;
       const caption=$('.av-preview-caption',preview);if(caption)caption.textContent=row.dataset.photoCaption||'Ảnh thật cùng dòng xe';
-      const images=$$('.av-preview-image img',preview),next=state.previewSlot^1;images[next].src=row.dataset.image;images[next].alt=row.dataset.photoAlt||'';
+      const images=$$('.av-preview-image img',preview),next=state.previewSlot^1;images[next].src=row.dataset.image;images[next].dataset.photoId=row.dataset.photoId;images[next].alt=row.dataset.photoAlt||'';
       if(gsap&&motion()){
         gsap.to(images[state.previewSlot],{opacity:0,scale:1.1,duration:.3,overwrite:true});
         gsap.fromTo(images[next],{yPercent:100,opacity:1,scale:1.05},{yPercent:0,opacity:1,scale:1,duration:.5,ease:'power3.out',overwrite:true});
@@ -503,7 +518,7 @@ body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
     $('.av-cursor')?.classList.remove('is-view');state.selected=-1;state.previewIndex=-1;
   }
   function setupCollection(section) {
-    listContext?.revert();state.collectionReady=false;state.collection=section;state.selected=-1;
+    listContext?.revert();state.collectionReady=false;state.collection=section;state.selected=-1;state.previewIndex=-1;state.previewSlot=0;
     if(!section||!gsap||!motion())return;
     state.collectionReady=true;
     listContext=gsap.context(()=>{
@@ -544,6 +559,7 @@ body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
   }
   function refresh() {
     clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{
+      hydratePhotos();
       window.ScrollTrigger?.getAll().forEach(t=>{if(t.trigger&&!t.trigger.isConnected)t.kill(true);});
       const hero=$('.av-hero'),collection=$('.av-collection');
       if(hero!==state.hero||(gsap&&motion()&&!state.heroReady))setupHero(hero);if(collection!==state.collection||(gsap&&motion()&&!state.collectionReady))setupCollection(collection);
@@ -607,6 +623,7 @@ body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
     const loader=$('.av-loader');if(loader){if(gsap&&motion())gsap.to(loader,{opacity:0,y:-12,duration:.35,onComplete:()=>loader.remove()});else loader.remove();}
     sessionStorage.setItem('av-loaded','1');refresh();
   }
+  hydratePhotos();
   start().catch(()=>{$('.av-loader')?.remove();refresh();});onScroll();
 })();
 
@@ -621,3 +638,5 @@ Sáu WebP đã có tại static/cars, không cần tải lại hoặc hotlink. N
 1. Lấy toàn bộ mã mới từ main, gồm static/cars và cấu hình Streamlit.
 2. Chạy python -m streamlit run app.py, hoặc Reboot app trên Streamlit Cloud.
 3. Ctrl+F5, thử hover/tap ảnh đúng tên xe và dự đoán/tải CSV.
+
+Ảnh runtime được app.py nhúng từ static/cars bằng data URI và registry dùng chung, không gọi đường dẫn tĩnh /app/static/.

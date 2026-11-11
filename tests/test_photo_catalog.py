@@ -1,11 +1,12 @@
 import hashlib
+import base64
 import unittest
 from pathlib import Path
 
 import pandas as pd
 from PIL import Image
 
-from photo_catalog import ROOT, load_catalog, reference_car, photo_for_car, public_photo_url
+from photo_catalog import ROOT, load_catalog, reference_car, photo_for_car, public_photo_url, embedded_photo_url
 
 
 class PhotoCatalogTests(unittest.TestCase):
@@ -43,6 +44,15 @@ class PhotoCatalogTests(unittest.TestCase):
                     self.assertTrue(photo[key])
                 self.assertTrue(photo['source_page'].startswith('https://commons.wikimedia.org/wiki/File:'))
                 self.assertEqual(public_photo_url(photo), '/app/static/cars/' + photo['filename'])
+
+    def test_embedded_photos_decode_to_verified_image_bytes(self):
+        for photo in self.catalog['photos']:
+            with self.subTest(photo=photo['id']):
+                src = embedded_photo_url(photo)
+                self.assertTrue(src.startswith('data:image/webp;base64,'))
+                content = base64.b64decode(src.split(',', 1)[1], validate=True)
+                self.assertEqual(hashlib.sha256(content).hexdigest(), photo['sha256'])
+                self.assertNotIn('/app/static/', src)
 
     def test_unknown_model_or_generation_never_gets_a_random_photo(self):
         for name, year in [('bmw 320d', 2015), ('maruti swift vdi', 2013),

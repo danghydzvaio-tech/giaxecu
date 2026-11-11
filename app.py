@@ -10,7 +10,7 @@ import pandas as pd
 import streamlit as st
 
 from service import load_assets, predict_vehicle
-from photo_catalog import load_catalog, reference_car, public_photo_url, photo_for_car
+from photo_catalog import load_catalog, reference_car, embedded_photo_url, photo_for_car
 
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title='AutoValue India · Giá xe cũ', page_icon='🚗', layout='wide')
@@ -23,7 +23,9 @@ def fragment(name):
         alt = 'Minh họa ô tô' if class_name == 'av-car' else ''
         return '<img class="' + class_name + '" alt="' + alt + '" decoding="async" src="data:image/svg+xml;base64,' + base64.b64encode(match.group(0).encode()).decode() + '">'
     content = re.sub(r'<svg\b[^>]*>.*?</svg>', svg_image, content, flags=re.S)
-    return content.replace('src="static/cars/', 'src="' + public_photo_url({'filename': ''}, st.get_option('server.baseUrlPath')))
+    for photo in load_catalog()['photos']:
+        content = content.replace('src="static/cars/' + photo['filename'] + '"', 'src="' + embedded_photo_url(photo) + '" data-photo-id="' + photo['id'] + '"')
+    return content
 
 
 st.html('<style>' + (ROOT / 'style.css').read_text(encoding='utf-8') + '</style>')
@@ -51,7 +53,7 @@ def collection_html():
     rows, credits = [], []
     for index, photo in enumerate(photos):
         car = reference_car(reference, photo)
-        image = public_photo_url(photo, st.get_option('server.baseUrlPath'))
+        image = ''  # Populated from the unique embedded registry before motion/CDN loading.
         name = html.escape(str(car['name']).title())
         tag = html.escape(f"{car['brand'].title()} · {int(car['year'])}")
         price = f"₹{car['selling_price']:,.0f}"
@@ -59,14 +61,20 @@ def collection_html():
         caption = html.escape(photo['photo_name'] + ' · ' + photo['author'] + ' · ' + photo['license'], quote=True)
         rows.append(f'''<button type="button" class="av-collection-row" data-color="{palette[index]}" data-index="{index}" data-image="{image}" data-photo-id="{photo['id']}" data-photo-alt="{alt}" data-photo-caption="{caption}" aria-expanded="false" aria-controls="av-row-extra-{index}">
           <span class="av-row-name">{name}</span><span class="av-row-tag">{tag}</span><span class="av-row-price">{price}</span>
-          <span class="av-row-extra" id="av-row-extra-{index}" hidden><img class="av-row-image" src="{image}" loading="lazy" alt="{alt}" width="{photo['width']}" height="{photo['height']}"><span>Giá nguồn lịch sử · {int(car['km_driven']):,} km</span><span class="av-photo-credit">{caption}</span></span></button>''')
+          <span class="av-row-extra" id="av-row-extra-{index}" hidden><img class="av-row-image" data-photo-id="{photo['id']}" loading="lazy" alt="{alt}" width="{photo['width']}" height="{photo['height']}"><span>Giá nguồn lịch sử · {int(car['km_driven']):,} km</span><span class="av-photo-credit">{caption}</span></span></button>''')
         credits.append(f'''<li><a href="{html.escape(photo['source_page'], quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(photo['photo_name'])}</a> · {html.escape(photo['author'])} · <a href="{html.escape(photo['license_url'], quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(photo['license'])}</a></li>''')
     layers = ''.join(f'<div class="av-collection-background" data-layer="{i}" style="background:{c}"></div>' for i, c in enumerate(palette))
-    initial = public_photo_url(photos[0], st.get_option('server.baseUrlPath'))
+    # Hero bytes already exist once in the hero img; embed each remaining photo once.
+    hero_id = load_catalog()['hero']
+    registry = '<div class="av-photo-assets" data-photo-registry hidden aria-hidden="true">' + ''.join(
+        '<span data-photo-key="' + photo['id'] + '" data-photo-src="' + embedded_photo_url(photo) + '"></span>'
+        for photo in photos if photo['id'] != hero_id
+    ) + '</div>'
+    initial_id = photos[0]['id']
     return f'''<section id="collection" class="av-collection" aria-label="Xe trong dữ liệu tham chiếu">{layers}
       <div class="av-collection-copy"><p class="av-eyebrow">AUTOVALUE INDIA</p><h2>Đối chiếu với xe trong dữ liệu</h2><p>Giá nguồn lịch sử, không phải tin rao đang bán. Ảnh thật cùng dòng/thế hệ xe, không xác nhận chính chiếc xe hoặc mọi phiên bản động cơ trong dữ liệu.</p></div>
       <div class="av-collection-list">{''.join(rows)}</div><details class="av-image-credits"><summary>Nguồn và giấy phép ảnh</summary><ul>{''.join(credits)}</ul><p>Ảnh được giảm kích thước và chuyển WebP. Bản WebP giữ giấy phép của ảnh gốc.</p></details></section>
-      <div class="av-preview" aria-hidden="true"><div class="av-preview-image"><img src="{initial}" alt=""><img src="{initial}" alt=""></div><span class="av-preview-caption">Ảnh thật cùng dòng xe</span></div>'''
+      {registry}<div class="av-preview" aria-hidden="true"><div class="av-preview-image"><img data-photo-id="{initial_id}" alt=""><img data-photo-id="{initial_id}" alt=""></div><span class="av-preview-caption">Ảnh thật cùng dòng xe</span></div>'''
 
 
 report = bundle['report']
@@ -186,4 +194,4 @@ st.html(fragment('footer'))
 # Streamlit sanitizes scripts out of st.html on some frontend versions.
 # Use its supported same-origin HTML component to initialize our own UI script.
 script_source = json.dumps((ROOT / 'script.js').read_text(encoding='utf-8')).replace('</', '<\\/')
-components.html('<script>if(window.parent.__avMotion&&window.parent.__avMotion.version==="photo-4"){window.parent.__avMotion.refresh();}else{const s=window.parent.document.createElement("script");s.textContent=' + script_source + ';window.parent.document.body.appendChild(s);}</script>', height=0, scrolling=False)
+components.html('<script>if(window.parent.__avMotion&&window.parent.__avMotion.version==="photo-inline-5"){window.parent.__avMotion.refresh();}else{const s=window.parent.document.createElement("script");s.textContent=' + script_source + ';window.parent.document.body.appendChild(s);}</script>', height=0, scrolling=False)
