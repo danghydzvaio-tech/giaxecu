@@ -10,6 +10,7 @@ import pandas as pd
 import streamlit as st
 
 from service import load_assets, predict_vehicle
+from photo_catalog import load_catalog, reference_car, public_photo_url, photo_for_car
 
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title='AutoValue India · Giá xe cũ', page_icon='🚗', layout='wide')
@@ -22,7 +23,7 @@ def fragment(name):
         alt = 'Minh họa ô tô' if class_name == 'av-car' else ''
         return '<img class="' + class_name + '" alt="' + alt + '" decoding="async" src="data:image/svg+xml;base64,' + base64.b64encode(match.group(0).encode()).decode() + '">'
     content = re.sub(r'<svg\b[^>]*>.*?</svg>', svg_image, content, flags=re.S)
-    return content
+    return content.replace('src="static/cars/', 'src="' + public_photo_url({'filename': ''}, st.get_option('server.baseUrlPath')))
 
 
 st.html('<style>' + (ROOT / 'style.css').read_text(encoding='utf-8') + '</style>')
@@ -45,31 +46,27 @@ except (OSError, ValueError, KeyError) as exc:
 
 
 def collection_html():
-    source = (ROOT / 'index.html').read_text(encoding='utf-8')
-    svg = re.search(r'<svg\b[^>]*class="av-car".*?</svg>', source, re.S).group(0)
-    image = 'data:image/svg+xml;base64,' + base64.b64encode(svg.encode()).decode()
-    palette = ['#dbe8dc', '#e9dfd3', '#dcdff0', '#e8dce3', '#d5e8e6', '#eee4cc']
-    rows = []
-    paint = [('#E8F0DC','#99AF99','#42645B'),('#EEDDD2','#B29A8B','#68574F'),('#E0E5F3','#9AAAC2','#45556F'),('#ECDDDE','#B49AA4','#705362'),('#E0F1EE','#87B7AD','#396D64'),('#F0E9D6','#BCAD82','#746442')]
-    for index, brand_name in enumerate(['maruti', 'honda', 'hyundai', 'toyota', 'ford', 'renault']):
-        subset = reference[reference.brand == brand_name]
-        popular = subset.name.value_counts().index[0]
-        selected = subset[subset.name == popular].sort_values('selling_price')
-        car = selected.iloc[len(selected) // 2]
-        light, middle_color, dark = paint[index]
-        colored_svg = svg.replace('#DFEFEE', light).replace('#8CA7AE', middle_color).replace('#34515F', dark)
-        image = 'data:image/svg+xml;base64,' + base64.b64encode(colored_svg.encode()).decode()
+    photos = load_catalog()['photos']
+    palette = ['#1c2d27', '#352020', '#202632', '#2b252f', '#1d2c2b', '#30281d']
+    rows, credits = [], []
+    for index, photo in enumerate(photos):
+        car = reference_car(reference, photo)
+        image = public_photo_url(photo, st.get_option('server.baseUrlPath'))
         name = html.escape(str(car['name']).title())
-        tag = html.escape(f"{brand_name.title()} · {int(car['year'])}")
+        tag = html.escape(f"{car['brand'].title()} · {int(car['year'])}")
         price = f"₹{car['selling_price']:,.0f}"
-        rows.append(f'''<button type="button" class="av-collection-row" data-color="{palette[index]}" data-index="{index}" data-image="{image}" aria-expanded="false" aria-controls="av-row-extra-{index}">
+        alt = html.escape(photo['photo_name'], quote=True)
+        caption = html.escape(photo['photo_name'] + ' · ' + photo['author'] + ' · ' + photo['license'], quote=True)
+        rows.append(f'''<button type="button" class="av-collection-row" data-color="{palette[index]}" data-index="{index}" data-image="{image}" data-photo-id="{photo['id']}" data-photo-alt="{alt}" data-photo-caption="{caption}" aria-expanded="false" aria-controls="av-row-extra-{index}">
           <span class="av-row-name">{name}</span><span class="av-row-tag">{tag}</span><span class="av-row-price">{price}</span>
-          <span class="av-row-extra" id="av-row-extra-{index}" hidden><img class="av-row-image" src="{image}" loading="lazy" alt="Minh họa ô tô, không phải ảnh xe thực tế"><span>Giá nguồn lịch sử · {int(car['km_driven']):,} km · Minh họa ô tô</span></span></button>''')
+          <span class="av-row-extra" id="av-row-extra-{index}" hidden><img class="av-row-image" src="{image}" loading="lazy" alt="{alt}" width="{photo['width']}" height="{photo['height']}"><span>Giá nguồn lịch sử · {int(car['km_driven']):,} km</span><span class="av-photo-credit">{caption}</span></span></button>''')
+        credits.append(f'''<li><a href="{html.escape(photo['source_page'], quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(photo['photo_name'])}</a> · {html.escape(photo['author'])} · <a href="{html.escape(photo['license_url'], quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(photo['license'])}</a></li>''')
     layers = ''.join(f'<div class="av-collection-background" data-layer="{i}" style="background:{c}"></div>' for i, c in enumerate(palette))
+    initial = public_photo_url(photos[0], st.get_option('server.baseUrlPath'))
     return f'''<section id="collection" class="av-collection" aria-label="Xe trong dữ liệu tham chiếu">{layers}
-      <div class="av-collection-copy"><p class="av-eyebrow">AUTOVALUE INDIA</p><h2>Đối chiếu với xe trong dữ liệu</h2><p>Giá nguồn lịch sử, không phải tin rao đang bán. Hình xe là minh họa SVG tự vẽ.</p></div>
-      <div class="av-collection-list">{''.join(rows)}</div></section>
-      <div class="av-preview" aria-hidden="true"><div class="av-preview-image"><img src="{image}" alt=""><img src="{image}" alt=""></div><span class="av-preview-caption">Minh họa ô tô</span></div>'''
+      <div class="av-collection-copy"><p class="av-eyebrow">AUTOVALUE INDIA</p><h2>Đối chiếu với xe trong dữ liệu</h2><p>Giá nguồn lịch sử, không phải tin rao đang bán. Ảnh thật cùng dòng/thế hệ xe, không xác nhận chính chiếc xe hoặc mọi phiên bản động cơ trong dữ liệu.</p></div>
+      <div class="av-collection-list">{''.join(rows)}</div><details class="av-image-credits"><summary>Nguồn và giấy phép ảnh</summary><ul>{''.join(credits)}</ul><p>Ảnh được giảm kích thước và chuyển WebP. Bản WebP giữ giấy phép của ảnh gốc.</p></details></section>
+      <div class="av-preview" aria-hidden="true"><div class="av-preview-image"><img src="{initial}" alt=""><img src="{initial}" alt=""></div><span class="av-preview-caption">Ảnh thật cùng dòng xe</span></div>'''
 
 
 report = bundle['report']
@@ -162,6 +159,10 @@ with st.container(key='curtain'):
                 st.download_button('Lưu kết quả (.csv)', download.to_csv(index=False).encode('utf-8-sig'),
                                     'ket_qua_gia_xe.csv', 'text/csv', on_click='ignore')
                 with st.expander('Đối chiếu với xe trong dữ liệu'):
+                    photo = photo_for_car(name, year)
+                    if photo:
+                        st.image(str(ROOT / 'static/cars' / photo['filename']), caption=photo['photo_name'] + ' · Ảnh tham khảo cùng dòng/thế hệ, không phải ảnh của chiếc xe trong dữ liệu.')
+                        st.markdown(f"Ảnh: {photo['author']} · [Nguồn]({photo['source_page']}) · [{photo['license']}]({photo['license_url']})")
                     examples = matching.copy()
                     examples['distance'] = abs(examples.year - year) + abs(examples.km_driven - km) / 20_000
                     examples = examples.sort_values('distance').head(5)
@@ -185,4 +186,4 @@ st.html(fragment('footer'))
 # Streamlit sanitizes scripts out of st.html on some frontend versions.
 # Use its supported same-origin HTML component to initialize our own UI script.
 script_source = json.dumps((ROOT / 'script.js').read_text(encoding='utf-8')).replace('</', '<\\/')
-components.html('<script>if(window.parent.__avMotion&&window.parent.__avMotion.version==="creative-3"){window.parent.__avMotion.refresh();}else{const s=window.parent.document.createElement("script");s.textContent=' + script_source + ';window.parent.document.body.appendChild(s);}</script>', height=0, scrolling=False)
+components.html('<script>if(window.parent.__avMotion&&window.parent.__avMotion.version==="photo-4"){window.parent.__avMotion.refresh();}else{const s=window.parent.document.createElement("script");s.textContent=' + script_source + ';window.parent.document.body.appendChild(s);}</script>', height=0, scrolling=False)

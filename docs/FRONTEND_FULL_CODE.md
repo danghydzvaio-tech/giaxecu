@@ -1,6 +1,6 @@
-# Full code giao diện Creative AutoValue India
+# Full code giao diện AutoValue India
 
-Bản này tiếp tục dùng Streamlit và ANN hiện có. `app.py` trong kho đã được nối với các tệp dưới đây; main file triển khai vẫn là `app.py`.
+Giao diện đen–mint–đỏ và ảnh thật. Dùng cùng app.py, photo_catalog.py và thư mục static/cars có sẵn trong kho; main file Streamlit vẫn là app.py.
 
 ## index.html
 
@@ -10,7 +10,7 @@ Bản này tiếp tục dùng Streamlit và ANN hiện có. `app.py` trong kho �
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#15324F">
+  <meta name="theme-color" content="#171717">
   <title>AutoValue India · Giá xe cũ</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -41,22 +41,10 @@ Bản này tiếp tục dùng Streamlit và ANN hiện có. `app.py` trong kho �
       <span class="av-mask"><span class="av-title-line">bằng thuật toán <em>AI</em></span></span></h1>
     <a href="#prediction" class="av-cta av-magnetic">Dự đoán giá xe <span aria-hidden="true">↗</span></a>
   </div>
-  <div class="av-art" aria-hidden="true" data-interactive-car>
+  <div class="av-art" data-interactive-car>
     <div class="av-car-halo"></div>
-    <svg xmlns="http://www.w3.org/2000/svg" class="av-car" viewBox="0 0 680 330" fill="none" role="presentation">
-      <defs><linearGradient id="av-body" x1="80" y1="120" x2="590" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#DFEFEE"/><stop offset=".5" stop-color="#8CA7AE"/><stop offset="1" stop-color="#34515F"/></linearGradient><linearGradient id="av-glass"><stop stop-color="#102D42"/><stop offset="1" stop-color="#2F5868"/></linearGradient></defs>
-      <ellipse cx="345" cy="283" rx="254" ry="15" fill="#02111D" opacity=".6"/>
-      <path d="M69 231 88 192Q94 179 119 174L205 157 271 102Q284 92 310 92H413Q437 93 453 112L502 160 563 178Q587 185 599 208L606 236 583 251H91Q74 249 69 231Z" fill="url(#av-body)" stroke="#C1DBDB" stroke-width="1.4"/>
-      <path d="m220 158 65-52h51v52Zm128-52h62q21 0 34 17l30 35H348Z" fill="url(#av-glass)" stroke="#A5C1C8"/>
-      <path d="M98 191h92m305-12 70 19m-376-27h288m-270 10v48m137-59v64m133-62 13 52" stroke="#577784" stroke-width="2"/>
-      <path d="M94 220h38m426-16 33 9" stroke="#D9F7E8" stroke-width="6" stroke-linecap="round"/>
-      <path d="M99 241h481" stroke="#172F3C" stroke-width="8"/>
-      <g fill="#0B1C2B" stroke="#7998A5" stroke-width="3"><circle cx="184" cy="242" r="40"/><circle cx="506" cy="242" r="40"/></g>
-      <g fill="#78939E" stroke="#C7D9DD" stroke-width="3"><circle cx="184" cy="242" r="22"/><circle cx="506" cy="242" r="22"/></g>
-      <g stroke="#1E3847" stroke-width="5"><path d="m184 220 0 44m-22-22h44m300-22v44m-22-22h44"/></g>
-      <path d="M249 179h18m119 0h18" stroke="#D8E7E9" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-    <span class="av-spark" style="left:23%;top:42%;--spark-size:33px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:39%;top:34%;--spark-size:46px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:59%;top:28%;--spark-size:35px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:76%;top:41%;--spark-size:49px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:83%;top:60%;--spark-size:31px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:60%;top:69%;--spark-size:41px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:37%;top:70%;--spark-size:31px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-spark" style="left:15%;top:58%;--spark-size:40px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-art-note">AUTOVALUE <span>INDIA</span></span>
+    <img class="av-car av-car-photo" src="static/cars/kwid.webp" alt="Renault Kwid RXT(O), ảnh thật chụp năm 2016" decoding="async" fetchpriority="high" width="1440" height="961">
+    <span aria-hidden="true" class="av-spark" style="left:23%;top:42%;--spark-size:33px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:39%;top:34%;--spark-size:46px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:59%;top:28%;--spark-size:35px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:76%;top:41%;--spark-size:49px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:83%;top:60%;--spark-size:31px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:60%;top:69%;--spark-size:41px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:37%;top:70%;--spark-size:31px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span aria-hidden="true" class="av-spark" style="left:15%;top:58%;--spark-size:40px"><svg xmlns="http://www.w3.org/2000/svg" class="av-spark-visual" viewBox="0 0 80 100" fill="none"><path d="M40 8c0 27 4 36 28 42-24 6-28 15-28 42 0-27-4-36-28-42C36 44 40 35 40 8Z" fill="#C8A86B"/><path d="M40 8v84M12 50h56" stroke="#FAF4E7" stroke-width="1.5"/></svg></span><span class="av-art-note">AUTOVALUE <span>INDIA</span></span><p class="av-photo-caption">Renault Kwid RXT(O) · Ảnh: Aswïn KP · <a href="https://commons.wikimedia.org/wiki/File:Renault_KWID_RXT(O).jpg" target="_blank" rel="noopener noreferrer">Nguồn ảnh</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></p>
   </div>
   <a href="#prediction" class="av-scroll" aria-label="Cuộn đến thông tin ô tô"><span aria-hidden="true">↓</span>Thông tin ô tô</a>
   <div class="av-hero-stat av-hero-stat--left"><strong class="av-count" data-stat="usable" data-count="6904">6.904</strong><span class="av-stat-label">Mẫu ô tô sau xử lý</span></div>
@@ -235,6 +223,101 @@ body,[data-testid="stApp"]{background:var(--av-studio)}
 .st-key-curtain .st-key-intro-note [data-testid="stCaptionContainer"],.st-key-curtain .st-key-result-panel>[data-testid="stVerticalBlock"]>[data-testid="stElementContainer"] [data-testid="stCaptionContainer"]{opacity:1}
 .av-collection-copy h2{text-wrap:balance}.av-preview>span{position:absolute;left:12px;right:12px;bottom:7px;font-size:8px;line-height:1.4;color:#436657}
 
+/* Photo edition: palette supplied by the user — charcoal, mint, wine red. */
+:root{
+  --av-navy:#F1F8F4;--av-ink:#F1F8F4;--av-teal:#88F9C0;--av-mint:#88F9C0;
+  --av-paper:#171717;--av-studio:#171717;--av-forest:#171717;
+  --av-soft-ink:#B8C8BE;--av-line:#3C4540;--av-wine:#A31C1B;
+  --av-shadow:0 20px 65px #00000030;
+}
+body,[data-testid="stApp"]{background:#171717;color:#F1F8F4}
+.av-header{color:#F1F8F4}
+.av-header:before{background:#171717e8;box-shadow:0 6px 32px #00000020}
+.av-header .av-symbol{color:#F1F8F4}.av-header .av-symbol span{color:#88F9C0}
+.av-nav{background:#242424b8;border-color:#88f9c02e;box-shadow:0 8px 32px #00000024}
+.av-nav a{color:#E8F1EC}
+.av-nav a.is-active:not(.av-nav-cta){background:#88F9C0;color:#171717}
+.av-nav.has-indicator a.is-active:not(.av-nav-cta),.av-nav:has(.av-nav-indicator[style]) a.is-active:not(.av-nav-cta){background:transparent;color:#171717}
+.av-nav-indicator{background:#88F9C0}
+.av-nav .av-nav-cta{background:#A31C1B;color:#fff;border:1px solid #d35e5c40}
+.av-hero{background:#171717;color:#F1F8F4}
+.av-hero h1{color:#F1F8F4}.av-hero h1 em,.av-glyph-italic{color:#88F9C0}
+.av-eyebrow{color:#AEBFB4}.av-eyebrow span{color:#88F9C0}
+.av-lead{color:#B8C8BE}
+.av-grid{opacity:.45;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px)}
+.av-orb{background:radial-gradient(circle,#A31C1B24,transparent 68%)}
+.av-cta{background:#88F9C0;color:#171717!important;box-shadow:0 10px 35px #88f9c00a}
+.av-art{width:46%;right:4%;top:25%;padding:0;transform:none;opacity:1}
+.av-car-photo{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:center;border-radius:28px;filter:none;box-shadow:0 28px 75px #00000045;border:1px solid #88f9c02b}
+.av-art:before{content:'';position:absolute;inset:-16px 23% -16px -16px;border-left:3px solid #A31C1B;border-top:1px solid #A31C1B66;border-bottom:1px solid #A31C1B66;border-radius:32px 0 0 32px;pointer-events:none;z-index:-1}
+.av-car-halo,.av-car-halo:after{border-color:#88f9c018;background:none}
+.av-art-note,.av-hero-index{color:#AEBFB4}.av-art-note span{color:#88F9C0}
+.av-art-note{bottom:-25px}
+.av-photo-caption{display:block;position:relative;margin:12px 2px 0;color:#B8C8BE;font:9px/1.8 var(--av-body);letter-spacing:.1px}
+.av-photo-caption a,.av-photo-credit a,.av-photo-credits a,.credit-links a{color:#88F9C0;text-decoration:underline;text-underline-offset:3px}
+.av-photo-caption a:hover,.av-photo-credit a:hover,.av-photo-credits a:hover,.credit-links a:hover{color:#fff}
+.av-spark-visual{filter:drop-shadow(0 0 9px #88f9c05c)}
+.av-spark:nth-child(2n) .av-spark-visual{filter:drop-shadow(0 0 9px #A31C1B80)}
+.av-hero-stat{color:#88F9C0}.av-stat-label,.av-hero-stat small{color:#B8C8BE}
+.av-scroll{color:#C5D3CA!important}.av-scroll>span{border-color:#88f9c045}
+.av-loader{background:#171717;color:#F1F8F4}.av-loader-track{background:#ffffff20}.av-loader-track i{background:#88F9C0}.av-percent{color:#B8C8BE}
+.av-cursor{border-color:#88F9C0;background:#88f9c008}.av-cursor-label{color:#171717}.av-cursor.is-view{border-color:#88F9C0;background:#88F9C0e6}
+.av-top{background:#88F9C0;color:#171717!important;box-shadow:0 10px 30px #00000035}
+.av-header a:focus-visible,.av-hero a:focus-visible,.av-footer a:focus-visible,.av-top:focus-visible{outline-color:#88F9C0}
+.av-skip{background:#88F9C0;color:#171717}
+.st-key-curtain{background:#171717;border-top:1px solid #88f9c030;box-shadow:0 -18px 70px #00000020}
+.st-key-curtain .st-key-intro-note p,.st-key-curtain .st-key-intro-note [data-testid="stCaptionContainer"]{color:#B8C8BE;opacity:1}
+.st-key-curtain .st-key-prediction-panel{background:#202020;color:#F1F8F4;border-color:#3C4540;box-shadow:0 22px 70px #00000024}
+.st-key-prediction-panel h2,.st-key-result-panel h2{color:#F1F8F4}
+.stApp :is([data-testid="stSelectbox"],[data-testid="stNumberInput"]) label{color:#B8C8BE}
+.stApp :is([data-testid="stSelectbox"],[data-testid="stNumberInput"]):focus-within label{color:#88F9C0}
+.stApp [data-baseweb="select"]>div,.stApp [data-testid="stNumberInputContainer"],.stApp [data-testid="stSelectbox"] .react-aria-ComboBox [role="group"]{background:#292929;border-color:#4A544E;color:#F1F8F4}
+.stApp input,.stApp [data-testid="stSelectbox"] input[role="combobox"]{color:#F1F8F4;background:transparent}
+.stApp [data-testid="stNumberInputContainer"] button,.stApp [data-testid="stSelectbox"] .react-aria-ComboBox button{background:transparent;color:#D3E1D8}
+.stApp [data-testid="stSelectbox"] .react-aria-ComboBox [role="group"]:focus-within,.stApp [data-testid="stNumberInputContainer"]:focus-within{outline:2px solid #88F9C0;outline-offset:2px}
+.stApp [data-testid="stExpander"]{background:#232323;border-color:#414B45;color:#F1F8F4}
+.st-key-prediction-panel [data-testid="stCaptionContainer"],.st-key-about-panel [data-testid="stCaptionContainer"]{color:#BCCBC1;opacity:1}
+.stApp [data-testid="stFormSubmitButton"] button{background:#88F9C0;color:#171717;border:0}
+.stApp [data-testid="stFormSubmitButton"] button:hover{background:#88F9C0;color:#171717}
+.stApp button[data-av-busy]:after{border-color:#17171740;border-top-color:#171717}
+.st-key-prediction-panel button:focus-visible,.st-key-result-panel button:focus-visible{outline-color:#88F9C0}
+.st-key-curtain .st-key-result-panel{color:#F1F8F4}
+.st-key-curtain .st-key-result-panel h2{color:#F1F8F4}
+.st-key-curtain .st-key-result-panel [data-testid="stMarkdownContainer"] p,.st-key-curtain .st-key-result-panel [data-testid="stCaptionContainer"]{color:#C0CEC5;opacity:1}
+.stApp [data-testid="stMetric"]{background:#222;border-color:#414B45;box-shadow:0 18px 50px #00000020}
+.st-key-curtain .st-key-result-panel [data-testid="stMetric"] [data-testid="stMarkdownContainer"] p{color:#C0CEC5}
+.stApp [data-testid="stMetricValue"]{color:#88F9C0}
+.st-key-curtain .st-key-result-panel [data-testid="stExpander"] [data-testid="stMarkdownContainer"] p,.st-key-curtain .st-key-result-panel [data-testid="stExpander"] [data-testid="stCaptionContainer"]{color:#C0CEC5;opacity:1}
+.st-key-curtain .st-key-result-panel [data-testid="stDownloadButton"] button{background:#242424;border-color:#88f9c060;color:#88F9C0}
+.st-key-curtain .st-key-result-panel [role="alert"] p,.st-key-curtain .st-key-result-panel [data-testid="stAlertContainer"] p{color:#F1F8F4}
+.st-key-about-panel{color:#DDE9E1}.st-key-about-panel a{color:#88F9C0}
+.av-collection{background:#202520;color:#F1F8F4;border:1px solid #88f9c021}
+.av-collection-copy h2{color:#F1F8F4}.av-collection-copy p{color:#B8C8BE}
+.av-collection-row{color:#F1F8F4;border-color:#C9DDCF2b}
+.av-collection-row:last-child{border-color:#C9DDCF2b}
+.av-collection-row:focus-visible{outline-color:#88F9C0}
+.av-row-name{color:#F1F8F4}.av-row-tag{color:#BCE3CB;border-color:#88f9c044}.av-row-price{color:#88F9C0}
+.av-row-extra{color:#C3D4C9}.av-row-extra a{color:#88F9C0;text-decoration:underline;text-underline-offset:3px}
+.av-row-image{object-fit:cover;object-position:center;background:#242424;border-color:#ffffff45;height:260px}
+.av-preview{background:#171717;color:#F1F8F4;border-color:#fff;box-shadow:0 20px 65px #00000055}
+.av-preview-image,.av-preview-image img{object-fit:cover;object-position:center}
+.av-preview-caption,.av-preview>span,.av-preview-caption span:last-child{color:#D5E4DA;opacity:1}
+.av-photo-credits,.credit-links{color:#B8C8BE;font:10px/1.9 var(--av-body)}
+.av-footer{background:#111;color:#B8C8BE;border-color:#88f9c022}.av-footer .av-brand{color:#F1F8F4}.av-footer a:hover{color:#88F9C0}
+@media(min-width:1500px){.av-art{right:4%;width:46%;top:24%}}
+@media(max-width:1150px) and (min-width:1001px){.av-art{right:3%;width:45%;top:31%}}
+@media(max-width:1000px){
+ .av-header:before{background:#171717ec}.av-menu-button{border-color:#88f9c04a;background:#242424d9}.av-menu-button span{background:#88F9C0}
+ .av-nav{background:#171717;border-color:#88f9c030}.av-nav a{color:#F1F8F4}.av-nav a.is-active:not(.av-nav-cta){background:#88F9C0;color:#171717}.av-nav .av-nav-cta{background:#A31C1B;color:#fff}
+ .av-art{width:70%;right:6%;top:auto;bottom:176px;padding:0;opacity:1}.av-car-photo{aspect-ratio:16/9;border-radius:24px}.av-art-note{bottom:-25px}.av-preview{display:none!important}.av-row-image{height:250px}
+}
+@media(max-width:600px){
+ .av-art{width:88%;left:6%;right:auto;bottom:202px;top:auto;padding:0;opacity:1}.av-car-photo{aspect-ratio:3/2;border-radius:20px;box-shadow:0 18px 45px #00000040}
+ .av-art:before{inset:-10px 25% -10px -10px;border-radius:24px 0 0 24px}.av-art-note{right:7%;bottom:-25px}.av-photo-caption{font-size:8px;line-height:1.7;margin-top:9px}.av-row-image{height:195px;border-radius:13px}.av-photo-credits,.credit-links{font-size:9px}
+}
+
+.av-art{isolation:isolate}
+
 ```
 
 ## script.js
@@ -242,7 +325,7 @@ body,[data-testid="stApp"]{background:var(--av-studio)}
 ```javascript
 (() => {
   'use strict';
-  const VERSION = 'creative-3';
+  const VERSION = 'photo-4';
   if (window.__avMotion) {
     if (window.__avMotion.version === VERSION) window.__avMotion.refresh();
     else window.location.reload();
@@ -400,7 +483,8 @@ body,[data-testid="stApp"]{background:var(--av-studio)}
     preview.classList.add('is-visible');
     if(state.previewIndex!==index){
       state.previewIndex=index;
-      const images=$$('.av-preview-image img',preview),next=state.previewSlot^1;images[next].src=row.dataset.image;
+      const caption=$('.av-preview-caption',preview);if(caption)caption.textContent=row.dataset.photoCaption||'Ảnh thật cùng dòng xe';
+      const images=$$('.av-preview-image img',preview),next=state.previewSlot^1;images[next].src=row.dataset.image;images[next].alt=row.dataset.photoAlt||'';
       if(gsap&&motion()){
         gsap.to(images[state.previewSlot],{opacity:0,scale:1.1,duration:.3,overwrite:true});
         gsap.fromTo(images[next],{yPercent:100,opacity:1,scale:1.05},{yPercent:0,opacity:1,scale:1,duration:.5,ease:'power3.out',overwrite:true});
@@ -528,12 +612,12 @@ body,[data-testid="stApp"]{background:var(--av-studio)}
 
 ```
 
-## Ảnh và sprite
+## Ảnh và nguồn
 
-Không cần chuẩn bị thêm. Xe SVG tự vẽ (viewBox 680×330) và 8 sprite SVG trong suốt (80×100) được nhúng trong `index.html`. Nếu muốn thay bằng ảnh riêng: `hero-car.webp` gợi ý 1600×900; `spark-01.svg` đến `spark-08.svg` gợi ý 160×200, nền trong suốt. Đây là lựa chọn thay thế, không phải tệp còn thiếu trong bản chạy.
+Sáu WebP đã có tại static/cars, không cần tải lại hoặc hotlink. Nguồn/giấy phép ở docs/IMAGE_CREDITS.md; mapping mẫu/năm và hash ở static/cars/catalog.json. Ảnh là tham khảo cùng dòng/thế hệ, không xác nhận chính chiếc xe trong dữ liệu giá.
 
 ## Chạy và kiểm tra
 
-1. Lấy trọn mã mới từ nhánh main, gồm app.py và 3 tệp giao diện.
-2. Chạy `python -m streamlit run app.py`, hoặc Reboot app trên Streamlit Cloud.
-3. Thử di chuột/tap dòng xe, cuộn trang rồi nhập xe và tải CSV kết quả.
+1. Lấy toàn bộ mã mới từ main, gồm static/cars và cấu hình Streamlit.
+2. Chạy python -m streamlit run app.py, hoặc Reboot app trên Streamlit Cloud.
+3. Ctrl+F5, thử hover/tap ảnh đúng tên xe và dự đoán/tải CSV.

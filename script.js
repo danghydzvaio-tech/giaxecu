@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = 'creative-3';
+  const VERSION = 'photo-4';
   if (window.__avMotion) {
     if (window.__avMotion.version === VERSION) window.__avMotion.refresh();
     else window.location.reload();
@@ -158,7 +158,8 @@
     preview.classList.add('is-visible');
     if(state.previewIndex!==index){
       state.previewIndex=index;
-      const images=$$('.av-preview-image img',preview),next=state.previewSlot^1;images[next].src=row.dataset.image;
+      const caption=$('.av-preview-caption',preview);if(caption)caption.textContent=row.dataset.photoCaption||'Ảnh thật cùng dòng xe';
+      const images=$$('.av-preview-image img',preview),next=state.previewSlot^1;images[next].src=row.dataset.image;images[next].alt=row.dataset.photoAlt||'';
       if(gsap&&motion()){
         gsap.to(images[state.previewSlot],{opacity:0,scale:1.1,duration:.3,overwrite:true});
         gsap.fromTo(images[next],{yPercent:100,opacity:1,scale:1.05},{yPercent:0,opacity:1,scale:1,duration:.5,ease:'power3.out',overwrite:true});

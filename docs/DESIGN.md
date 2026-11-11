@@ -40,3 +40,8 @@ Tài liệu PDF về ANN/GPA được tham khảo để hiểu thuật toán. Kh
 Bản mới bổ sung nền studio ivory, serif Cormorant Garamond và vùng dữ liệu teal đậm. Nội dung ban đầu, bộ mô hình, thông số, liên kết và luồng nhập xe → kết quả → CSV được giữ. Các hiệu ứng không tạo số liệu marketing: hai góc hero dùng số mẫu train-clean/test thật; danh sách dùng giá nguồn lịch sử có ghi chú minh họa SVG.
 
 Các hiệu ứng dùng transform/opacity/filter; nền gallery là các lớp màu tĩnh crossfade opacity. Pin chỉ áp dụng hero do HTML sở hữu. Reduced motion bỏ pin, Lenis và các vòng lặp sway; CDN bị chặn vẫn dùng được biểu mẫu và mở dòng xe.
+
+
+## Palette ảnh mẫu và ảnh chụp thực tế
+
+Phiên bản hiện tại dùng đen #171717, mint #88F9C0 và đỏ #A31C1B. Ảnh SVG ô tô trước đây được thay bằng ảnh thật được xác minh dòng/thế hệ. Sprite trang trí SVG và các hiệu ứng vẫn giữ. Ảnh tải từ nguồn có giấy phép phù hợp và tự phục vụ trong static/cars; metadata/ghi công xem IMAGE_CREDITS.md. Bảng giá nguồn là các bản ghi train thật, không phải giá bán hiện tại hoặc giá tạo để khớp ảnh.

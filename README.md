@@ -170,7 +170,7 @@ Tác giả dữ liệu: Nehal Birla. Các CSV tham chiếu/kiểm tra là trích
 Giữ ứng dụng Streamlit và toàn bộ biểu mẫu/kết quả hiện có. Ba tệp `index.html`, `style.css`, `script.js` ở gốc được `app.py` nạp làm lớp giao diện. **Không chọn index.html làm main file trên Streamlit.** Mở riêng HTML chỉ xem được phần khung; chức năng dự đoán vẫn cần chạy `streamlit run app.py`.
 
 - Header cố định có nền kính mờ, ẩn/hiện theo hướng cuộn; menu điện thoại hỗ trợ Escape và giữ focus.
-- Hero có minh họa SVG tự tạo, chữ xuất hiện theo dòng, parallax và nút magnetic trên chuột desktop.
+- Hero có ảnh ô tô thật có nguồn/giấy phép, chữ xuất hiện theo dòng, parallax và nút magnetic trên chuột desktop.
 - GSAP 3.12.5, ScrollTrigger và Lenis 1.3.4 nạp qua jsDelivr; Google Fonts có font fallback.
 - Có thanh tiến trình cuộn, loader ngắn, nút về đầu, hiệu ứng thẻ giá, floating labels và trạng thái gửi form.
 - `prefers-reduced-motion` tắt Lenis, loader và các animation; CDN lỗi thì biểu mẫu và dự đoán vẫn chạy.
@@ -189,9 +189,23 @@ Giữ Streamlit và ANN hiện có. Không có ảnh hoặc tài nguyên sao ch�
 3. ScrollTrigger pin riêng hero HTML do ứng dụng sở hữu, nền teal bo góc 32px của phần tiếp theo phủ lên khi cuộn. Không pin/reparent biểu mẫu hoặc DOM do React của Streamlit quản lý.
 4. Sáu dòng xe được lấy trực tiếp từ tập train: giá nguồn lịch sử, không phải giá ANN hay tin đang bán. Nền chuyển bằng lớp màu opacity; ảnh minh họa đổi bằng overflow-hidden + translate thay clip-path. Trên điện thoại hoặc bàn phím, chọn dòng để mở ảnh/mô tả.
 
-Hai số liệu hero là số mẫu sau làm sạch và số mẫu test từ metadata mô hình, không phải khách hàng hoặc mức hài lòng. SVG xe và 8 sprite đã nhúng trong `index.html`; không cần chuẩn bị ảnh. Xe dùng viewBox 680×330; sprite 80×100, nền trong suốt. Nếu thay bằng ảnh riêng có quyền sử dụng, gợi ý WebP 1600×900 và sprite SVG/PNG 160×200 trong suốt; đổi phần nguồn ảnh tương ứng trong template.
+Hai số liệu hero là số mẫu sau làm sạch và số mẫu test từ metadata mô hình, không phải khách hàng hoặc mức hài lòng. Ảnh ô tô thật được lưu tại `static/cars/`; 8 sprite trang trí vẫn là SVG tự vẽ trong `index.html`. Nguồn, tác giả, giấy phép và phép ghép ảnh với dữ liệu có trong `static/cars/catalog.json` và `docs/IMAGE_CREDITS.md`.
 
 Các bộ mã hoàn chỉnh nằm ở `index.html`, `style.css`, `script.js`; `app.py` nạp chúng vào Streamlit và xử lý dữ liệu/dự đoán. Mở riêng index.html chỉ xem khung hero/footer, không thay cho `streamlit run app.py`.
 
 
 Full code giao diện theo thứ tự index.html → style.css → script.js: [docs/FRONTEND_FULL_CODE.md](docs/FRONTEND_FULL_CODE.md).
+
+
+## Bảng màu và ảnh thật
+
+Giao diện dùng đúng bảng màu mẫu: **#171717** (đen), **#88F9C0** (mint), **#A31C1B** (đỏ rượu vang). Chữ nhỏ ưu tiên trắng/mint để giữ tương phản; đỏ dùng cho CTA/điểm nhấn.
+
+- Hero: Renault Kwid RXT(O) ảnh thật; 6 dòng tham chiếu có ảnh riêng của Swift Dzire, Honda City, Hyundai Eon, Toyota Etios sedan, Ford Figo và Renault Kwid.
+- Ảnh được đối chiếu tên dòng/thế hệ với caption tác giả, lưu cục bộ và có ghi công. Không khẳng định ảnh chính là chiếc xe trong bản ghi giá, hoặc đúng mọi trim/động cơ theo từng thị trường.
+- Đã tham khảo Pixabay/Pexels/Unsplash người dùng gửi. Ảnh Etios có nguồn gốc Pixabay CC0; các ảnh còn lại chọn metadata rõ từ Commons. Unsplash trả HTTP401 khi tìm kiếm trong phiên.
+- `photo_catalog.py` ghép ảnh với tên xe/năm/bản ghi train; không gán ngẫu nhiên ảnh cho mẫu xe chưa xác minh. Khi có ảnh phù hợp, mục đối chiếu kết quả cũng hiển thị ảnh đó.
+- `static/cars/catalog.json`: tên ảnh, mẫu/năm tham chiếu, giá nguồn thực tế, SHA-256, tác giả và license.
+- `static/cars/*.webp`: sáu ảnh tối ưu kích thước. Giữ chúng trong kho, không hotlink từ site ngoài.
+- `.streamlit/config.toml` có `server.enableStaticServing = true`; URL ảnh là `/app/static/cars/...`. Cần **Reboot app** sau khi cập nhật cấu hình theme/static serving.
+- Xem [nguồn và giấy phép ảnh](docs/IMAGE_CREDITS.md). Bộ mô hình ANN và artifact đánh giá không thay đổi.
