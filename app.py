@@ -1,12 +1,12 @@
 """AutoValue India: premium Streamlit UI; prediction service remains unchanged."""
-from datetime import datetime
 from pathlib import Path
-from zoneinfo import ZoneInfo
 import base64
 import html
+import json
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from service import load_assets, predict_vehicle
 from photo_catalog import load_catalog, reference_car, photo_for_car
@@ -111,7 +111,7 @@ def load_css():
     @keyframes float{50%{transform:translateY(-6px)}}@keyframes drift{to{transform:translate(70px,90px)}}
     @media(max-width:760px){.block-container{padding:1.2rem 1rem}.hero{grid-template-columns:1fr;padding:24px;gap:24px}.hero h1{font-size:36px}.hero-image img{height:200px;aspect-ratio:16/9}.brandbar{font-size:10px}.brandbar span{font-size:9px}.st-key-input-card,.st-key-result-card,.st-key-reference-card,.st-key-about-card{padding:20px}.mini-grid{grid-template-columns:1fr}.mini-card{padding:16px}.mini-card strong{font-size:22px}[data-baseweb="tab-list"]{gap:14px}.price{font-size:clamp(38px,10vw,60px)}.estimate{padding:18px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-    </style>''', unsafe_allow_html=True)
+    ''' + (ROOT / 'ui_effects.css').read_text(encoding='utf-8') + '</style>', unsafe_allow_html=True)
 
 
 def money(value):
@@ -171,8 +171,8 @@ st.markdown('<div class="brandbar"><div><b class="brand-dot">◈</b> AUTOVALUE I
 image = hero_photo()
 art = ('<figure class="hero-image"><img src="' + image + '" alt="Cận cảnh xe BMW màu đen" width="2912" height="1632">'
        '<figcaption>Ảnh minh họa · <a href="https://vi.pngtree.com/freebackground/black-bmw-car-in-close-up-photo-photo_15181512.html" target="_blank" rel="noopener noreferrer">Pngtree</a></figcaption></figure>') if image else ''
-st.markdown('<section class="hero"><div><div class="eyebrow">DỮ LIỆU LỊCH SỬ. GÓC NHÌN RÕ RÀNG HƠN.</div>'
-            '<h1>Khám phá giá trị<br><span class="gradient">chiếc xe của bạn.</span></h1>'
+st.markdown('<section class="hero"><div>'
+            '<h1>Dự đoán giá xe<br><span class="gradient">bằng thuật toán AI</span></h1>'
             '<p>Chọn phiên bản, kiểm tra thông số và nhận giá tham khảo bằng mô hình AI đã được huấn luyện sẵn.</p>'
             '<div class="badges"><span class="badge">✦ Mô hình ANN</span><span class="badge">◉ Dữ liệu CarDekho</span><span class="badge">↗ Kết quả bằng INR</span></div></div>' + art + '</section>', unsafe_allow_html=True)
 st.markdown('<p class="scope">Giá lịch sử tại Ấn Độ · 1 lakh = ₹100.000 · Không phải giá thị trường Việt Nam hoặc giá giao dịch hiện tại.</p>', unsafe_allow_html=True)
@@ -303,5 +303,8 @@ with about:
         st.write('Mô hình hiện chưa có khoảng dự đoán được hiệu chỉnh, điểm tin cậy cho từng xe hoặc phân tích mức ảnh hưởng riêng của từng yếu tố. Vì vậy ứng dụng không hiển thị các chỉ số này.')
         st.markdown('[Nguồn: Nehal Birla · CarDekho trên Kaggle](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho) · [Giấy phép dữ liệu ODbL](https://opendatacommons.org/licenses/odbl/1.0/)')
 
-current_year = datetime.now(ZoneInfo('Asia/Ho_Chi_Minh')).year
-st.markdown(f'<div class="page-footer"><span>© {current_year} Đặng Huy · AutoValue India</span><span><a href="https://github.com/danghydzvaio-tech/giaxecu" target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Giá trị tham khảo từ dữ liệu lịch sử</span></div>', unsafe_allow_html=True)
+st.markdown('<div class="page-footer"><span class="founder-credit">Người sáng lập: Trần Đăng Huy</span><span><a href="https://github.com/danghydzvaio-tech/giaxecu" target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Giá trị tham khảo từ dữ liệu lịch sử</span></div>', unsafe_allow_html=True)
+
+# Run our own JavaScript in the app document, including after Streamlit reruns.
+effects = json.dumps((ROOT / 'ui_effects.js').read_text(encoding='utf-8')).replace('</', '<\\/')
+components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-1"){p.__avGlass.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);}</script>', height=0, scrolling=False)

@@ -1,0 +1,132 @@
+/* Warm glass surfaces: the original grid, spacing and palette stay intact. */
+@property --ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+:root {
+  --glass-radius: 20px;
+  --glass-small-radius: 16px;
+  --glass-border: rgba(244, 217, 160, .35);
+  --glass-surface: rgba(91, 70, 50, .42);
+  --glass-shadow: 0 14px 36px rgba(40, 30, 21, .24), 0 0 24px rgba(200, 121, 44, .09);
+  --ring-speed: 5.5s;
+  --reveal-ease: cubic-bezier(.22, 1, .36, 1);
+}
+html, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+.stApp { isolation: isolate; }
+[data-testid="stAppViewContainer"] { z-index: 1; }
+.av-page-glow {
+  position: fixed; inset: -15vh -8vw auto auto;
+  width: min(1000px, 110vw); height: 95vh;
+  z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 70% 30%, rgba(200,121,44,.18), transparent 65%);
+  transform: translate3d(0, var(--glow-offset, 0px), 0);
+}
+.av-scroll-progress {
+  position: fixed; inset: 0 0 auto; height: 3px;
+  z-index: 2000; pointer-events: none;
+  background: var(--orange, #C8792C);
+  transform: scaleX(var(--scroll-progress, 0)); transform-origin: left;
+}
+:is(.hero, .sample-car, .st-key-input-card, .st-key-result-card,
+    .st-key-reference-card, .st-key-about-card, .mini-card, .estimate,
+    [data-testid="stMetric"], [data-testid="stExpander"]) {
+  position: relative; border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius); background: var(--glass-surface);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: var(--glass-shadow);
+}
+/* Replace the old entry animation; IntersectionObserver controls the reveals. */
+:is(.hero, .st-key-input-card, .st-key-result-card,
+    .st-key-reference-card, .st-key-about-card) { animation: none; }
+.hero { background: rgba(58,44,31,.84); }
+:is([data-testid="stNumberInputContainer"], [data-baseweb="select"] > div,
+    [data-testid="stSelectbox"] [role="group"]) {
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-small-radius) !important;
+  background: rgba(58,44,31,.64) !important;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(200,121,44,.05);
+}
+:is([data-testid="stFormSubmitButton"], [data-testid="stDownloadButton"],
+    [data-testid="stButton"]) button {
+  position: relative; isolation: isolate;
+  border: 1px solid var(--glass-border); border-radius: var(--glass-radius);
+  background: var(--glass-surface); box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.badge { border-radius: var(--glass-small-radius); border-color: var(--glass-border); }
+.hero-image img { border-radius: var(--glass-radius); border-color: var(--glass-border); }
+/* The mask cuts out the center: only a one-pixel border receives the light. */
+:is(.hero, .sample-car, .st-key-input-card, .st-key-result-card,
+    .st-key-reference-card, .st-key-about-card,
+    [data-testid="stFormSubmitButton"] button)::after {
+  content: ''; position: absolute; inset: 0; padding: 1px;
+  border-radius: inherit; pointer-events: none; z-index: 2;
+  background: conic-gradient(from var(--ring-angle), transparent 0deg 275deg,
+    rgba(200,121,44,.2) 295deg, var(--orange) 320deg, var(--cream) 340deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: av-border-orbit var(--ring-speed) linear infinite;
+  opacity: .7; transition: opacity .25s ease;
+}
+@keyframes av-border-orbit { to { --ring-angle: 360deg; } }
+:is(.hero, .sample-car, .st-key-input-card, .st-key-result-card,
+    .st-key-reference-card, .st-key-about-card, .mini-card,
+    [data-testid="stFormSubmitButton"] button) {
+  transition: transform .3s var(--reveal-ease), box-shadow .3s ease, border-color .3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  :is(.hero, .sample-car, .st-key-input-card, .st-key-result-card,
+      .st-key-reference-card, .st-key-about-card, .mini-card,
+      [data-testid="stFormSubmitButton"] button):hover {
+    transform: translateY(-4px); border-color: rgba(244,217,160,.7);
+    box-shadow: 0 18px 42px rgba(40,30,21,.28), 0 0 30px rgba(200,121,44,.16);
+  }
+  :is(.hero, .sample-car, .st-key-input-card, .st-key-result-card,
+      .st-key-reference-card, .st-key-about-card,
+      [data-testid="stFormSubmitButton"] button):hover::after {
+    animation-duration: 2.5s; opacity: 1;
+  }
+}
+/* These classes are applied only when JavaScript is running. */
+.av-reveal-pending {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .8s var(--reveal-ease), transform .8s var(--reveal-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.av-reveal-pending:not(.av-reveal-visible)::after { animation-play-state: paused; }
+.av-reveal-visible { opacity: 1; transform: none; }
+.av-sticky-menu {
+  position: fixed !important; z-index: 990; box-sizing: border-box;
+  border: 1px solid var(--glass-border); border-radius: var(--glass-radius);
+  background: rgba(91,70,50,.82); box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  transform-origin: center top;
+  transition: transform .25s ease, background-color .25s ease;
+}
+.av-sticky-menu.is-compact { transform: scale(.985); background: rgba(58,44,31,.9); }
+.av-menu-spacer { display: block; pointer-events: none; }
+.av-menu-spacer[hidden] { display: none; }
+.founder-credit { text-transform: none; letter-spacing: normal; }
+.stApp [data-testid="stMarkdownContainer"] a { color: var(--cream); }
+.stApp [data-testid="stMarkdownContainer"] a:hover {
+  color: var(--orange); background: var(--button-ink);
+}
+@media (max-width: 760px) {
+  /* Avoid a stack of expensive backdrop layers on smaller devices. */
+  :is(.mini-card, .estimate, [data-testid="stMetric"], [data-testid="stExpander"]) {
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, [data-testid="stAppViewContainer"], [data-testid="stMain"] { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .av-reveal-pending, .av-reveal-visible { opacity: 1 !important; transform: none !important; }
+  .av-page-glow, .av-sticky-menu.is-compact { transform: none !important; }
+}
