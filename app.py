@@ -23,7 +23,8 @@ def embedded_photo_url(photo):
     if Path(filename).name != filename:
         raise ValueError('Tên tệp ảnh không hợp lệ.')
     payload = (ROOT / 'static/cars' / filename).read_bytes()
-    return 'data:image/webp;base64,' + base64.b64encode(payload).decode('ascii')
+    mime = 'image/png' if Path(filename).suffix.lower() == '.png' else 'image/webp'
+    return 'data:' + mime + ';base64,' + base64.b64encode(payload).decode('ascii')
 
 
 def fragment(name):
@@ -37,6 +38,18 @@ def fragment(name):
     content = re.sub(r'<svg\b[^>]*>.*?</svg>', svg_image, content, flags=re.S)
     for photo in load_catalog()['photos']:
         content = content.replace('src="static/cars/' + photo['filename'] + '"', 'src="' + embedded_photo_url(photo) + '" data-photo-id="' + photo['id'] + '"')
+    if name == 'hero':
+        hero_src = embedded_photo_url({'filename': '—Pngtree—black bmw car in close-up_15181512.png'})
+        content = re.sub(
+            r'<img\b[^>]*class="av-car av-car-photo"[^>]*>',
+            lambda _: '<img class="av-car av-car-photo" src="' + hero_src + '" data-photo-id="bmw-hero" alt="Cận cảnh phần đầu xe BMW màu đen" decoding="async" fetchpriority="high" width="2048" height="1148">',
+            content,
+        )
+        content = re.sub(
+            r'<p class="av-photo-caption">.*?</p>',
+            '<p class="av-photo-caption">BMW · Ảnh minh họa · <a href="https://vi.pngtree.com/freebackground/black-bmw-car-in-close-up-photo-photo_15181512.html" target="_blank" rel="noopener noreferrer">Nguồn: Pngtree</a></p>',
+            content, flags=re.S,
+        )
     return content
 
 
@@ -77,7 +90,7 @@ def collection_html():
         credits.append(f'''<li><a href="{html.escape(photo['source_page'], quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(photo['photo_name'])}</a> · {html.escape(photo['author'])} · <a href="{html.escape(photo['license_url'], quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(photo['license'])}</a></li>''')
     layers = ''.join(f'<div class="av-collection-background" data-layer="{i}" style="background:{c}"></div>' for i, c in enumerate(palette))
     # Hero bytes already exist once in the hero img; embed each remaining photo once.
-    hero_id = load_catalog()['hero']
+    hero_id = 'bmw-hero'
     registry = '<div class="av-photo-assets" data-photo-registry hidden aria-hidden="true">' + ''.join(
         '<span data-photo-key="' + photo['id'] + '" data-photo-src="' + embedded_photo_url(photo) + '"></span>'
         for photo in photos if photo['id'] != hero_id
