@@ -3,11 +3,13 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 import base64
+import html
 
 import pandas as pd
 import streamlit as st
 
 from service import load_assets, predict_vehicle
+from photo_catalog import load_catalog, reference_car, photo_for_car
 
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title='AutoValue India · Định giá xe cũ', page_icon='🚘', layout='wide')
@@ -70,6 +72,17 @@ def load_css():
     [data-testid="stMetric"]{background:#0b0f1a66;padding:18px;border:1px solid var(--line);border-radius:14px}[data-testid="stMetricValue"]{font-family:Sora,sans-serif;font-size:24px;color:#E8ECF4}
     .range-track{height:10px;background:linear-gradient(90deg,#6C5CE7,#00D2FF);border-radius:10px;margin:18px 0 10px}.range-ends{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:#D5DFF0}
     .page-footer{border-top:1px solid var(--line);margin:40px 0 0;padding:24px 0;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    /* Vehicle gallery: keep the verified photos and their historical records. */
+    .sample-gallery{margin:28px 0 32px}.sample-gallery h2{margin:0 0 8px}.sample-intro{font-size:13px;color:var(--muted);max-width:760px;margin:0 0 20px}
+    .sample-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+    .sample-car{overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--card);transition:transform .2s,border-color .2s,box-shadow .2s}
+    .sample-car:hover{transform:translateY(-6px);border-color:#8274F4;box-shadow:0 16px 36px #0004}
+    .sample-car>img{display:block;width:100%;height:190px;object-fit:cover;background:#0b0f1a}
+    .sample-body{padding:20px}.sample-car h3{font-size:16px!important;line-height:1.5;margin:0 0 8px;padding:0}.sample-meta{font-size:12px;color:var(--muted);margin:0 0 12px}
+    .sample-price{font-family:Sora,sans-serif;font-size:25px;font-weight:600;color:var(--gold)}.sample-price-label{font-size:10px;color:var(--muted);margin-top:4px}
+    .sample-car details{margin-top:16px;font-size:11px;color:var(--muted);line-height:1.7}.sample-car summary{cursor:pointer;color:#D4DEF0}.sample-car details p{margin:8px 0 0}.sample-car details a{color:#72DFFF}
+    @media(max-width:1000px){.sample-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.sample-grid{grid-template-columns:1fr}.sample-car>img{height:210px}}
     /* 06. Motion and small screens */
     @keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
     @keyframes float{50%{transform:translateY(-6px)}}@keyframes drift{to{transform:translate(70px,90px)}}
@@ -99,6 +112,37 @@ def hero_photo():
     return 'data:image/png;base64,' + base64.b64encode(path.read_bytes()).decode('ascii')
 
 
+@st.cache_data(show_spinner=False, max_entries=16)
+def sample_photo(filename):
+    if Path(filename).name != filename:
+        raise ValueError('Tên tệp ảnh không hợp lệ.')
+    return 'data:image/webp;base64,' + base64.b64encode((ROOT / 'static/cars' / filename).read_bytes()).decode('ascii')
+
+
+def show_sample_gallery(reference):
+    cards = []
+    for photo in load_catalog()['photos']:
+        car = reference_car(reference, photo)
+        name = html.escape(str(car['name']).title())
+        alt = html.escape(photo['photo_name'], quote=True)
+        author = html.escape(photo['author'])
+        source = html.escape(photo['source_page'], quote=True)
+        license_url = html.escape(photo['license_url'], quote=True)
+        license_name = html.escape(photo['license'])
+        cards.append(
+            f'<article class="sample-car"><img src="{sample_photo(photo["filename"])}" alt="{alt}" loading="lazy" width="{photo["width"]}" height="{photo["height"]}">'
+            f'<div class="sample-body"><h3>{name}</h3><p class="sample-meta">{int(car["year"])} · {int(car["km_driven"]):,} km</p>'
+            f'<div class="sample-price">{money(car["selling_price"])}</div><div class="sample-price-label">GIÁ NGUỒN LỊCH SỬ · INR</div>'
+            f'<details><summary>Thông tin ảnh &amp; nguồn</summary><p>{alt} · Ảnh: {author} · '
+            f'<a href="{source}" target="_blank" rel="noopener noreferrer">Nguồn ảnh</a> · '
+            f'<a href="{license_url}" target="_blank" rel="noopener noreferrer">{license_name}</a></p>'
+            '<p>Ảnh tham khảo cùng dòng/thế hệ, không xác nhận chính chiếc xe hoặc mọi phiên bản động cơ. Ảnh được giảm kích thước và chuyển WebP, giữ giấy phép gốc.</p></details></div></article>'
+        )
+    st.markdown('<section class="sample-gallery" aria-label="Xe mẫu trong dữ liệu"><p class="eyebrow">KHÁM PHÁ BỘ SƯU TẬP</p>'
+                '<h2>Những chiếc xe trong dữ liệu</h2><p class="sample-intro">Ảnh thật cùng dòng/thế hệ xe. Giá lấy từ bản ghi lịch sử tương ứng trong tập huấn luyện, không phải giá rao bán hiện tại hoặc kết quả dự đoán.</p>'
+                '<div class="sample-grid">' + ''.join(cards) + '</div></section>', unsafe_allow_html=True)
+
+
 load_css()
 st.markdown('<div class="brandbar"><div><b class="brand-dot">◈</b> AUTOVALUE INDIA</div><span>ẤN ĐỘ · INR (₹)</span></div>', unsafe_allow_html=True)
 image = hero_photo()
@@ -115,6 +159,7 @@ except (OSError, ValueError, KeyError):
     st.error('Không thể nạp mô hình. Hãy kiểm tra đầy đủ thư mục artifacts/ theo README của dự án.')
     st.stop()
 report = bundle['report']
+show_sample_gallery(reference)
 BRAND_LABELS = {'bmw': 'BMW', 'mg': 'MG', 'land': 'Land Rover'}
 FUEL_LABELS = {'petrol': 'Xăng', 'diesel': 'Dầu diesel', 'cng': 'Khí CNG', 'lpg': 'Khí LPG'}
 GEAR_LABELS = {'manual': 'Số sàn', 'automatic': 'Số tự động'}
@@ -196,6 +241,10 @@ with valuation:
             a.download_button('↓ Tải kết quả CSV', download.to_csv(index=False).encode('utf-8-sig'), 'ket_qua_gia_xe.csv', 'text/csv', on_click='ignore', width='stretch')
             b.button('↻ Dự đoán lại', on_click=clear_result, width='stretch', help='Ẩn kết quả hiện tại; giữ các thông số để bạn chỉnh và dự đoán tiếp.')
             with st.expander('Đối chiếu với xe trong dữ liệu'):
+                photo = photo_for_car(r['name'], r['year'])
+                if photo:
+                    st.image(str(ROOT / 'static/cars' / photo['filename']), caption=photo['photo_name'] + ' · Ảnh tham khảo cùng dòng/thế hệ, không phải ảnh của chiếc xe trong dữ liệu.')
+                    st.markdown(f"Ảnh: {photo['author']} · [Nguồn]({photo['source_page']}) · [{photo['license']}]({photo['license_url']})")
                 examples = matching.copy()
                 examples['distance'] = abs(examples.year - r['year']) + abs(examples.km_driven - r['km_driven']) / 20_000
                 st.dataframe(examples.sort_values('distance').head(5)[['year', 'km_driven', 'selling_price']].rename(columns={'year': 'Năm', 'km_driven': 'Số km', 'selling_price': 'Giá nguồn (₹)'}), hide_index=True, width='stretch')
