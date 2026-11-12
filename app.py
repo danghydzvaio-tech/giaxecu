@@ -2,8 +2,8 @@
 from pathlib import Path
 import base64
 import html
-import json
 import importlib
+import json
 
 import altair as alt
 import pandas as pd
@@ -28,103 +28,9 @@ st.set_page_config(page_title='AutoValue India · Định giá xe cũ', page_ico
 
 
 def load_css():
-    st.markdown('''<style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
-    /* 01. Palette, page and typography */
-    :root{--brown:#5B4632;--deep:#3A2C1F;--cream:#F4D9A0;--orange:#C8792C;--button-ink:#281E15;--card:#473525;--field:var(--deep);--bg:var(--brown);--ink:var(--cream);--muted:var(--cream);--accent:var(--orange);--line:rgba(244,217,160,.42);--control-line:rgba(244,217,160,.65);--glow:rgba(200,121,44,.22);--shadow:rgba(40,30,21,.32);--gradient:linear-gradient(110deg,var(--cream),var(--orange));--title-font:'Cormorant Garamond',Georgia,'Times New Roman',serif;--page-glow:radial-gradient(ellipse at 92% 8%,rgba(200,121,44,.22),transparent 55%);--page-gradient:linear-gradient(135deg,var(--brown),var(--deep) 82%)}
-    html,body{background:var(--deep);color:var(--ink);color-scheme:dark}
-    .stApp{background:var(--page-glow),var(--page-gradient);color:var(--ink);font-family:Inter,sans-serif}
-    #MainMenu,footer,[data-testid="stHeader"]{display:none}
-    .block-container{max-width:1240px;padding:2rem 2rem 1rem}
-    h1,h2,h3{font-family:Sora,Inter,sans-serif;letter-spacing:-.02em;color:var(--ink)}
-    h2{font-size:1.6rem!important}h3{font-size:1.1rem!important}
-    p,li,[data-testid="stCaptionContainer"]{line-height:1.7}
-    [data-testid="stCaptionContainer"]{color:var(--muted);opacity:1}
-    a{color:var(--cream);text-decoration-color:var(--orange)}a:hover{color:var(--orange);background-color:var(--button-ink)}a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--cream)!important;outline-offset:4px}
-    .brandbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 24px;gap:16px;font-size:12px;letter-spacing:.15em;font-weight:700}
-    .brandbar{background:var(--brown);color:var(--cream)}.brandbar span{color:var(--muted);letter-spacing:.1em;font-weight:500}.brand-dot{color:var(--cream)}
-    /* 02. Hero: CSS-only motion, no JavaScript or animation CDN */
-    .hero{display:grid;grid-template-columns:1.05fr 1fr;gap:32px;align-items:center;position:relative;overflow:hidden;isolation:isolate;border:1px solid var(--line);border-radius:28px;padding:44px;background:radial-gradient(ellipse at 100% 0%,rgba(200,121,44,.1),transparent 65%),var(--deep);animation:appear .6s ease both}
-    .hero:before{content:'';position:absolute;z-index:-1;left:30%;top:-100px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(244,217,160,.06),transparent 70%);animation:drift 25s ease-in-out infinite alternate;pointer-events:none}
-    .eyebrow{font-size:12px;letter-spacing:.17em;color:var(--cream);font-weight:700;margin:0 0 18px}
-    .hero h1{font-family:var(--title-font);font-size:clamp(32px,3.7vw,52px);font-weight:700;line-height:1.2;margin:0 0 20px;padding:0;text-shadow:0 2px 18px rgba(244,217,160,.1)}
-    .hero h1,.gradient{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}
-    .hero p{font-size:14px;color:var(--muted);margin:0 0 22px;max-width:470px}
-    .badges{display:flex;flex-wrap:wrap;gap:8px}.badge{font-size:12px;color:var(--cream);background:transparent;border:1px solid var(--line);border-radius:100px;padding:7px 10px}
-    .hero-image{margin:0;animation:float 7s ease-in-out infinite}.hero-image img{display:block;width:100%;height:clamp(240px,26vw,360px);object-fit:cover;object-position:53% center;border-radius:20px;border:1px solid var(--line);box-shadow:0 24px 60px var(--shadow)}.hero-image figcaption{font-size:12px;color:var(--muted);margin:10px 0 0;text-align:right}.hero-image a{color:var(--cream)}.hero-image a:hover{color:var(--orange)}
-    .scope{font-size:12px;color:var(--muted);margin:18px 2px 24px}
-    /* 03. Tabs and cards */
-    [data-baseweb="tab-list"]{gap:24px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
-    button[data-baseweb="tab"]{font-family:Inter,sans-serif;white-space:nowrap;height:52px;color:var(--muted);padding:0 4px}
-    [role="tab"][aria-selected="true"]{color:var(--cream)!important}
-    [data-baseweb="tab-highlight"]{height:3px;background:var(--gradient);border-radius:8px}
-    .st-key-input-card,.st-key-result-card,.st-key-reference-card,.st-key-about-card{padding:28px;border:1px solid var(--line);background:linear-gradient(150deg,var(--card),var(--deep));border-radius:20px;box-shadow:0 16px 50px var(--shadow);animation:appear .45s ease both}
-    .st-key-result-card{margin-top:24px;border-color:var(--orange);animation-delay:.1s}
-    .section-kicker{font-size:12px;letter-spacing:.15em;font-weight:700;color:var(--cream);margin:0 0 8px}
-    .card-intro{color:var(--muted);font-size:13px;margin:0 0 20px}
-    .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0 24px}
-    .mini-card{padding:20px;background:var(--deep);border:1px solid var(--line);border-radius:16px;transition:transform .2s,box-shadow .2s,border-color .2s}
-    .mini-card:hover{transform:translateY(-6px);border-color:var(--orange);box-shadow:0 16px 36px var(--shadow)}
-    .mini-card small{display:block;color:var(--muted);font-size:12px;margin-bottom:10px}.mini-card strong{font-family:Sora,sans-serif;font-size:clamp(17px,2vw,24px);color:var(--ink)}
-    /* 04. Accessible native input controls */
-    [data-testid="stForm"]{border:0;padding:0}
-    [data-testid="stWidgetLabel"] p{font-size:12px;color:var(--cream);font-weight:500}
-    [data-testid="stNumberInputContainer"],[data-baseweb="select"]>div,[data-testid="stSelectbox"] [role="group"]{border-radius:12px!important;background:var(--field)!important;border-color:var(--control-line)!important;transition:border-color .2s,box-shadow .2s}
-    [data-testid="stNumberInputContainer"]:focus-within,[data-baseweb="select"]:focus-within>div,[data-testid="stSelectbox"] [role="group"]:focus-within{border-color:var(--cream)!important;box-shadow:0 0 0 3px var(--glow)}
-    [data-testid="stNumberInputContainer"]{min-height:48px}
-    [data-testid="stSelectbox"] input[role="combobox"]{min-height:46px}
-    [data-testid="stExpander"]{border-radius:14px;border-color:var(--line);background:var(--deep)}
-    [data-testid="stFormSubmitButton"] button{min-height:54px;width:100%;border:1px solid var(--cream);border-radius:999px;background:transparent;color:var(--cream);font-weight:700;transition:transform .2s,box-shadow .2s,background-color .2s,color .2s}
-    [data-testid="stFormSubmitButton"] button:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--glow);background:var(--orange);color:var(--button-ink);border-color:var(--cream)}
-    [data-testid="stFormSubmitButton"] button:active{transform:scale(.98)}
-    [data-testid="stDownloadButton"] button,[data-testid="stButton"] button{border-radius:999px;min-height:44px;border:1px solid var(--cream);background:transparent;color:var(--cream)}
-    [data-testid="stDownloadButton"] button:hover,[data-testid="stButton"] button:hover{background:var(--orange);color:var(--button-ink);border-color:var(--cream)}
-    [data-testid="stAlert"]{border-radius:14px;border:1px solid var(--line);background:var(--deep);color:var(--cream)}
-    /* 05. Result and historical reference range */
-    .estimate{padding:26px;border:1px solid var(--line);background:radial-gradient(ellipse at 100% 0%,var(--glow),transparent 65%),var(--deep);border-radius:18px;margin:12px 0 18px}
-    .estimate .label{color:var(--cream);font-size:12px}.price{font-family:Sora,sans-serif;font-size:clamp(48px,6vw,80px);line-height:1.2;font-weight:700;letter-spacing:-.04em;color:var(--cream);overflow-wrap:anywhere;margin:14px 0}.estimate .unit{font-size:12px;color:var(--muted)}
-    [data-testid="stMetric"]{background:var(--deep);padding:18px;border:1px solid var(--line);border-radius:14px}[data-testid="stMetricValue"]{font-family:Sora,sans-serif;font-size:24px;color:var(--cream)}
-    .range-track{height:10px;background:var(--gradient);border-radius:10px;margin:18px 0 10px}.range-ends{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--cream)}
-    .history-track{position:relative;height:12px;background:rgba(244,217,160,.12);border-radius:10px;margin:22px 3px 14px}.history-track i{position:absolute;top:0;height:100%;min-width:2px;background:var(--gradient);border-radius:10px}.history-track b{position:absolute;top:-6px;height:24px;width:3px;background:var(--cream);transform:translateX(-50%);box-shadow:0 0 10px var(--orange)}
-    .page-footer{border-top:1px solid var(--line);margin:40px 0 0;padding:24px 0;background:var(--brown);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    /* Vehicle gallery: keep the verified photos and their historical records. */
-    .sample-gallery{margin:28px 0 32px}.sample-gallery h2{margin:0 0 8px}.sample-intro{font-size:13px;color:var(--muted);max-width:760px;margin:0 0 20px}
-    .sample-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-    .sample-car{overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--card);transition:transform .2s,border-color .2s,box-shadow .2s}
-    .sample-car:hover{transform:translateY(-6px);border-color:var(--orange);box-shadow:0 16px 36px var(--shadow)}
-    .sample-car>img{display:block;width:100%;height:190px;object-fit:cover;background:var(--deep)}
-    .sample-body{padding:20px}.sample-car h3{font-size:16px!important;line-height:1.5;margin:0 0 8px;padding:0}.sample-meta{font-size:12px;color:var(--muted);margin:0 0 12px}
-    .sample-price{font-family:Sora,sans-serif;font-size:25px;font-weight:600;color:var(--cream)}.sample-price-label{font-size:12px;color:var(--muted);margin-top:4px}
-    .sample-car details{margin-top:16px;font-size:12px;color:var(--muted);line-height:1.7}.sample-car summary{cursor:pointer;color:var(--cream)}.sample-car details p{margin:8px 0 0}.sample-car details a{color:var(--cream)}.sample-car details a:hover{color:var(--orange)}
-    /* Theme native Streamlit controls and their portalled dropdowns as well. */
-    [data-testid="stAppViewContainer"],[data-testid="stMain"]{background:transparent}
-    .stApp :is(p,li,h2,h3,label,summary),[data-testid="stCaptionContainer"],[data-testid="stMetricLabel"]{color:var(--cream)}
-    .eyebrow,.section-kicker,.badge,.sample-price-label{ text-transform:uppercase;letter-spacing:.08em }
-    .hero p,.scope,.sample-intro,.card-intro,.sample-meta,.page-footer{text-transform:none;letter-spacing:normal}
-    [role="tab"] p{font-size:12px;letter-spacing:.08em;text-transform:uppercase}
-    [role="tab"]:hover{color:var(--cream);background:var(--deep)}
-    [role="tab"] .react-aria-SelectionIndicator{background:var(--gradient)}
-    [data-testid="stNumberInputContainer"] input,[data-testid="stSelectbox"] input,[data-baseweb="select"] input{background:transparent!important;color:var(--cream)!important;caret-color:var(--cream);-webkit-text-fill-color:var(--cream)}
-    [data-testid="stNumberInputContainer"] button,[data-testid="stSelectbox"] button{color:var(--cream);background:transparent}
-    [data-testid="stNumberInputContainer"] button:hover,[data-testid="stSelectbox"] button:hover{color:var(--button-ink);background:var(--orange)}
-    [role="listbox"],[data-baseweb="popover"]>div{background:var(--deep)!important;color:var(--cream)!important;border-color:var(--line)!important}
-    [role="option"]{background:var(--deep)!important;color:var(--cream)!important}
-    [role="option"]:hover,[role="option"][aria-selected="true"],[role="option"][data-focused="true"]{background:var(--orange)!important;color:var(--button-ink)!important}
-    [data-testid="stFormSubmitButton"] button p,[data-testid="stDownloadButton"] button p,[data-testid="stButton"] button p{color:inherit}
-    [data-testid="stTooltipIcon"]{color:var(--cream)}[data-testid="stTooltipIcon"]:hover{color:var(--orange)}
-    [role="tooltip"],[data-testid="stTooltipContent"]{background:var(--button-ink)!important;color:var(--cream)!important}
-    [data-testid="stAlert"] [data-testid="stMarkdownContainer"],[data-testid="stAlert"] svg{color:var(--cream)}
-    .hero-image a:hover,.sample-car details a:hover,.page-footer a:hover{background:var(--button-ink)}
-    ::selection{background:var(--orange);color:var(--button-ink)}
-    @media(forced-colors:active){.hero h1,.gradient{background:none;color:CanvasText;text-shadow:none}}
-    @media(max-width:1000px){.sample-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:600px){.sample-grid{grid-template-columns:1fr}.sample-car>img{height:210px}}
-    /* 06. Motion and small screens */
-    @keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-    @keyframes float{50%{transform:translateY(-6px)}}@keyframes drift{to{transform:translate(70px,90px)}}
-    @media(max-width:760px){.block-container{padding:1.2rem 1rem}.hero{grid-template-columns:1fr;padding:24px;gap:24px}.hero h1{font-size:34px}.hero-image img{height:160px;aspect-ratio:16/9}.brandbar{font-size:12px}.brandbar span{font-size:12px}.st-key-input-card,.st-key-result-card,.st-key-reference-card,.st-key-about-card{padding:20px}.mini-grid{grid-template-columns:1fr}.mini-card{padding:16px}.mini-card strong{font-size:22px}[data-baseweb="tab-list"]{gap:14px}.price{font-size:clamp(38px,10vw,60px)}.estimate{padding:18px}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-    ''' + (ROOT / 'ui_effects.css').read_text(encoding='utf-8') + (ROOT / 'navbar.css').read_text(encoding='utf-8') + '</style>', unsafe_allow_html=True)
+    files = ['assets/theme.css', 'ui_effects.css', 'navbar.css']
+    css = '\n'.join((ROOT / filename).read_text(encoding='utf-8') for filename in files)
+    st.markdown('<style>' + css + '</style>', unsafe_allow_html=True)
 
 
 def money(value):
@@ -361,6 +267,7 @@ with st.container(key='about-section'):
 
 st.markdown('<div class="page-footer"><span class="founder-credit">Người sáng lập: Trần Đăng Huy</span><span><a href="https://github.com/danghydzvaio-tech/giaxecu" target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Giá trị tham khảo từ dữ liệu lịch sử</span></div>', unsafe_allow_html=True)
 
-# Run our own JavaScript in the app document, including after Streamlit reruns.
+# One zero-height bootstrap for our trusted scripts; each controller reuses its
+# observers across reruns. st.html sanitizes scripts in the deployed frontend.
 effects = json.dumps((ROOT / 'ui_effects.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'navbar.js').read_text(encoding='utf-8')).replace('</', '<\\/')
-components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-1"&&p.__avNav?.version==="nav-1"){p.__avGlass.refresh();p.__avNav.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);}</script>', height=0, scrolling=False)
+components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-2"&&p.__avNav?.version==="nav-1"){p.__avGlass.refresh();p.__avNav.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);s.remove();}</script>', height=0, scrolling=False)

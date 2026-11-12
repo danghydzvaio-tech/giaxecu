@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = 'glass-1';
+  const VERSION = 'glass-2';
   if (window.__avGlass?.version === VERSION) {
     window.__avGlass.refresh();
     return;
@@ -22,7 +22,6 @@
   document.body.append(bar);
   app.prepend(glow);
 
-  let nav, spacer, fixed = false, normalHeight = 0;
   let frame = 0, refreshTimer = 0, observer;
   const observed = new WeakSet();
   const shown = new WeakSet();
@@ -66,51 +65,14 @@
     });
   }
 
-  function releaseMenu() {
-    if (!nav) return;
-    nav.classList.remove('av-sticky-menu', 'is-compact');
-    ['left', 'top', 'width'].forEach(key => nav.style.removeProperty(key));
-    if (spacer) spacer.hidden = true;
-    fixed = false;
-  }
-  function bindMenu() {
-    const next = $('[role="tablist"]');
-    if (next === nav && spacer?.isConnected) return;
-    releaseMenu();
-    spacer?.remove();
-    nav = next;
-    if (!nav) return;
-    spacer = document.createElement('div');
-    spacer.className = 'av-menu-spacer';
-    spacer.hidden = true;
-    spacer.setAttribute('aria-hidden', 'true');
-    nav.before(spacer);
-    measureMenu();
-  }
-  function measureMenu() {
-    if (!nav?.isConnected || fixed) return;
-    const styles = getComputedStyle(nav);
-    normalHeight = nav.offsetHeight + (parseFloat(styles.marginBottom) || 0);
-    spacer.style.height = `${normalHeight}px`;
-  }
   function paintScroll() {
     frame = 0;
     const y = main.scrollTop;
     const available = main.scrollHeight - main.clientHeight;
     const progress = available > 0 ? Math.min(1, Math.max(0, y / available)) : 0;
-    const bounds = nav?.isConnected ? (fixed ? spacer : nav).getBoundingClientRect() : null;
-    const top = (pageScroll ? 0 : main.getBoundingClientRect().top) + 8;
-    const pin = !!bounds && bounds.top <= top;
-    // Read geometry first; all writes below are batched in this frame.
+    // Read scroll metrics first; batch the visual writes in this frame.
     bar.style.setProperty('--scroll-progress', progress);
     glow.style.setProperty('--glow-offset', `${reduced.matches ? 0 : Math.min(140, y * .08)}px`);
-    if (pin) {
-      if (!fixed) { spacer.hidden = false; fixed = true; }
-      nav.style.left = `${bounds.left}px`;
-      nav.style.width = `${bounds.width}px`;
-      nav.style.top = `${top}px`;
-      nav.classList.add('av-sticky-menu', 'is-compact');
-    } else if (fixed) releaseMenu();
   }
   function scheduleScroll() {
     if (!frame) frame = requestAnimationFrame(paintScroll);
@@ -118,13 +80,11 @@
   function refresh() {
     clearTimeout(refreshTimer);
     refreshTimer = setTimeout(() => {
-      bindMenu();
       observeSections();
       scheduleScroll();
     }, 80);
   }
   function resize() {
-    measureMenu();
     scheduleScroll();
   }
   function motionChanged() {
@@ -132,7 +92,7 @@
     else observeSections();
     scheduleScroll();
   }
-  // Streamlit replaces sections after predictions and tab/brand changes.
+  // Streamlit replaces sections after predictions and gallery/brand changes.
   const mutations = new MutationObserver(refresh);
   mutations.observe(main, { childList: true, subtree: true });
   const sizes = new ResizeObserver(resize);
@@ -152,7 +112,7 @@
       scrollTarget.removeEventListener('scroll', scheduleScroll);
       window.removeEventListener('resize', resize);
       reduced.removeEventListener('change', motionChanged);
-      releaseMenu(); spacer?.remove(); bar.remove(); glow.remove();
+      bar.remove(); glow.remove();
       document.querySelectorAll('.av-reveal-pending').forEach(element => {
         element.classList.remove('av-reveal-pending');
         element.classList.add('av-reveal-visible');

@@ -180,9 +180,15 @@ def read_source(path=None):
     else:
         print('Downloading public Kaggle version 4…', flush=True)
         with urlopen(DOWNLOAD, timeout=60) as response:
-            archive = response.read(10 * 1024 * 1024)
-        with zipfile.ZipFile(io.BytesIO(archive)) as package:
-            payload = package.read(SOURCE_FILE)
+            archive = response.read()
+            expected_length = response.headers.get('Content-Length')
+        if expected_length is not None and len(archive) != int(expected_length):
+            raise ValueError('Tệp tải từ Kaggle chưa đầy đủ; hãy tải lại trước khi huấn luyện.')
+        try:
+            with zipfile.ZipFile(io.BytesIO(archive)) as package:
+                payload = package.read(SOURCE_FILE)
+        except (zipfile.BadZipFile, EOFError) as exc:
+            raise ValueError('Tệp Kaggle không phải ZIP hợp lệ hoặc đã bị cắt; hãy tải lại.') from exc
     if hashlib.sha256(payload).hexdigest() != SOURCE_SHA256:
         raise ValueError('SHA-256 của CSV không khớp Car details v3.csv, Kaggle dataset version 4.')
     return payload
