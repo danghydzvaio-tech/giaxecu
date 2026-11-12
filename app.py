@@ -4,6 +4,7 @@ import base64
 import html
 import json
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
@@ -282,7 +283,25 @@ with st.container(key='reference-section'):
         st.caption(f'{name.title()} · {FUEL_LABELS.get(pair[0], pair[0])} · {GEAR_LABELS.get(pair[1], pair[1])}. Mỗi điểm là trung vị các mẫu lịch sử, không phải dự báo khấu hao của một chiếc xe.')
         trend = profile.groupby('year', as_index=False).agg(price=('selling_price', 'median'), samples=('selling_price', 'size'))
         if len(trend) >= 2:
-            st.line_chart(trend.rename(columns={'year': 'Năm sản xuất', 'price': 'Giá trung vị (INR)'}), x='Năm sản xuất', y='Giá trung vị (INR)', color=PALETTE['orange'], height=280)
+            plot = trend.rename(columns={'year': 'Năm sản xuất', 'price': 'Giá trung vị (INR)'})[['Năm sản xuất', 'Giá trung vị (INR)']]
+            # Preserve Streamlit's line/hover/zoom behavior; format only the year.
+            base = alt.Chart(plot, width=0, height=280).mark_line().encode(
+                x=alt.X('Năm sản xuất:Q', title='Năm sản xuất', scale=alt.Scale(),
+                        axis=alt.Axis(grid=False, tickMinStep=1, format='d')),
+                y=alt.Y('Giá trung vị (INR):Q', title='Giá trung vị (INR)',
+                        scale=alt.Scale(), axis=alt.Axis(grid=True)),
+                color=alt.value(PALETTE['orange']),
+                tooltip=[alt.Tooltip('Năm sản xuất:Q', format='d'),
+                         alt.Tooltip('Giá trung vị (INR):Q')],
+            )
+            nearest = alt.selection_point(nearest=True, on='mousemove',
+                                          fields=['Năm sản xuất'], empty=False, clear='mouseleave')
+            chart = alt.layer(
+                base,
+                base.mark_point(opacity=0).add_params(nearest),
+                base.mark_point(filled=True, size=65).transform_filter(nearest),
+            ).configure_legend(symbolType='stroke').properties(width=0, height=280).interactive()
+            st.altair_chart(chart, width='stretch', height=280)
         else:
             st.info('Cấu hình này chưa có đủ năm sản xuất để vẽ đường giá. Xem các mẫu trong bảng bên dưới.')
         st.dataframe(trend.rename(columns={'year': 'Năm sản xuất', 'price': 'Giá trung vị (INR)', 'samples': 'Số mẫu'}), hide_index=True, width='stretch')
