@@ -7,7 +7,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from car_model import estimate
+from car_model import estimate, estimate_interval
 
 ROOT = Path(__file__).resolve().parent
 
@@ -68,4 +68,24 @@ def predict_vehicle(bundle, reference, row):
     price = estimate(bundle, row)
     if not np.isfinite(price) or price <= 0:
         raise ValueError('Chưa thể dự đoán đáng tin cậy cho cấu hình này. Hãy kiểm tra thông số xe.')
+    brand_rows = int((reference.brand == row['brand']).sum())
+    if brand_rows < 10:
+        warnings.append(f'Độ tin cậy thấp: hãng {row["brand"].title()} chỉ có {brand_rows} mẫu huấn luyện (dưới 10 mẫu).')
+    if price > 1_000_000:
+        warnings.append('Độ tin cậy thấp: giá dự đoán trên 10 lakh; sai số có thể lớn hơn ở phân khúc này.')
     return price, warnings, peers
+
+
+def prediction_interval(bundle, row):
+    """Return low/central/high INR for inputs already checked by predict_vehicle."""
+    low, central, high = estimate_interval(bundle, row)
+    if not np.isfinite([low, central, high]).all() or not 0 <= low <= central <= high:
+        raise ValueError('Khoảng dự đoán không hợp lệ; hãy kiểm tra phiên bản mô hình.')
+    return low, central, high
+
+
+def historical_reference(peers, year):
+    """Prefer comparable years ±2; explicitly signal fallback below five rows."""
+    nearby = peers[peers.year.between(float(year) - 2, float(year) + 2)]
+    fallback = len(nearby) < 5
+    return (peers.copy() if fallback else nearby.copy()), fallback

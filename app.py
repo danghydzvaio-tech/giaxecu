@@ -3,13 +3,22 @@ from pathlib import Path
 import base64
 import html
 import json
+import importlib
 
 import altair as alt
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-from service import load_assets, predict_vehicle
+try:
+    from service import load_assets, predict_vehicle, prediction_interval, historical_reference
+except ImportError:
+    # Community Cloud can retain the previous imported modules during a hot update.
+    import car_model
+    importlib.reload(car_model)
+    import service
+    importlib.reload(service)
+    from service import load_assets, predict_vehicle, prediction_interval, historical_reference
 from photo_catalog import load_catalog, reference_car, photo_for_car
 from price_format import format_inr, format_price_units, indian_axis_expr
 
@@ -76,6 +85,7 @@ def load_css():
     .estimate .label{color:var(--cream);font-size:12px}.price{font-family:Sora,sans-serif;font-size:clamp(48px,6vw,80px);line-height:1.2;font-weight:700;letter-spacing:-.04em;color:var(--cream);overflow-wrap:anywhere;margin:14px 0}.estimate .unit{font-size:12px;color:var(--muted)}
     [data-testid="stMetric"]{background:var(--deep);padding:18px;border:1px solid var(--line);border-radius:14px}[data-testid="stMetricValue"]{font-family:Sora,sans-serif;font-size:24px;color:var(--cream)}
     .range-track{height:10px;background:var(--gradient);border-radius:10px;margin:18px 0 10px}.range-ends{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--cream)}
+    .history-track{position:relative;height:12px;background:rgba(244,217,160,.12);border-radius:10px;margin:22px 3px 14px}.history-track i{position:absolute;top:0;height:100%;min-width:2px;background:var(--gradient);border-radius:10px}.history-track b{position:absolute;top:-6px;height:24px;width:3px;background:var(--cream);transform:translateX(-50%);box-shadow:0 0 10px var(--orange)}
     .page-footer{border-top:1px solid var(--line);margin:40px 0 0;padding:24px 0;background:var(--brown);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     /* Vehicle gallery: keep the verified photos and their historical records. */
     .sample-gallery{margin:28px 0 32px}.sample-gallery h2{margin:0 0 8px}.sample-intro{font-size:13px;color:var(--muted);max-width:760px;margin:0 0 20px}
@@ -121,12 +131,17 @@ def money(value):
     return format_inr(value)
 
 
+def percent(value):
+    return f'{value:.1f}'.replace('.', ',') + '%'
+
+
 def clear_result():
     st.session_state.pop('valuation_result', None)
 
 
 @st.cache_resource
-def assets():
+def assets(manifest_version):
+    # A regenerated manifest also invalidates the cached model after deployment.
     return load_assets(ROOT)
 
 
@@ -177,14 +192,19 @@ art = ('<figure class="hero-image"><img src="' + image + '" alt="' + html.escape
 st.markdown('<section class="hero"><div>'
             '<h1>Dự đoán giá xe<br><span class="gradient">bằng thuật toán AI</span></h1>'
             '<p>Chọn phiên bản, kiểm tra thông số và nhận giá tham khảo bằng mô hình AI đã được huấn luyện sẵn.</p>'
-            '<div class="badges"><span class="badge">✦ Mô hình ANN</span><span class="badge">◉ Dữ liệu CarDekho</span><span class="badge">↗ Kết quả bằng INR</span></div></div>' + art + '</section>', unsafe_allow_html=True)
+            '<div class="badges"><span class="badge">✦ Mô hình AI</span><span class="badge">◉ Dữ liệu CarDekho</span><span class="badge">↗ Kết quả bằng INR</span></div></div>' + art + '</section>', unsafe_allow_html=True)
 st.markdown('<p class="scope">Giá tham khảo thị trường xe cũ Ấn Độ (INR), dựa trên dữ liệu lịch sử CarDekho đến năm 2020, không phải giá rao bán hiện tại.</p>', unsafe_allow_html=True)
 try:
-    bundle, reference = assets()
+    manifest_version = (ROOT / 'artifacts/manifest.json').read_text(encoding='utf-8')
+    bundle, reference = assets(manifest_version)
 except (OSError, ValueError, KeyError):
     st.error('Không thể nạp mô hình. Hãy kiểm tra đầy đủ thư mục artifacts/ theo README của dự án.')
     st.stop()
 report = bundle['report']
+if st.session_state.get('model_manifest') != manifest_version:
+    clear_result()
+    st.session_state.model_manifest = manifest_version
+model_label = report['selected_model']['label']
 BRAND_LABELS = {'bmw': 'BMW', 'mg': 'MG', 'land': 'Land Rover'}
 FUEL_LABELS = {'petrol': 'Xăng', 'diesel': 'Dầu diesel', 'cng': 'Khí CNG', 'lpg': 'Khí LPG'}
 GEAR_LABELS = {'manual': 'Số sàn', 'automatic': 'Số tự động'}
@@ -237,7 +257,9 @@ with st.container(key='valuation-section'):
         try:
             with st.spinner('Đang đối chiếu thông số và ước tính giá xe…'):
                 price, notes, matching = predict_vehicle(bundle, reference, row)
-            st.session_state.valuation_result = dict(row=row, price=price, notes=notes, matching=matching)
+                interval_low, price, interval_high = prediction_interval(bundle, row)
+            st.session_state.valuation_result = dict(row=row, price=price, notes=notes, matching=matching,
+                                                     interval_low=interval_low, interval_high=interval_high)
         except ValueError as exc:
             st.error(str(exc))
     result = st.session_state.get('valuation_result')
@@ -248,17 +270,24 @@ with st.container(key='valuation-section'):
             st.subheader('Giá tham khảo của bạn')
             st.write(f"**{r['name'].title()} · {r['year']} · {r['km_driven']:,} km**")
             st.caption('Kết quả cho thông số ở lần bấm Dự đoán gần nhất. Bấm lại sau khi chỉnh thông số.')
-            st.markdown(f'<div class="estimate"><div class="label">GIÁ DỰ ĐOÁN · INR</div><div class="price">{money(price)}</div><div class="unit">Ước tính bằng mô hình ANN</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="estimate"><div class="label">GIÁ DỰ ĐOÁN · INR</div><div class="price">{money(price)}</div><div class="unit">Ước tính bằng {html.escape(model_label)}</div></div>', unsafe_allow_html=True)
+            st.markdown(f'**Khoảng {money(result["interval_low"])} – {money(result["interval_high"])} · độ tin cậy mục tiêu 80%**')
+            st.caption(f'Split conformal trên dữ liệu lịch sử; độ phủ thực tế trên tập kiểm tra: {percent(report["conformal"]["test_coverage"] * 100)}. Mức phủ này không bảo đảm riêng cho từng chiếc xe.')
             st.metric('Tương đương', format_price_units(price))
             st.caption('1 lakh = ₹1,00,000; 1 crore = 100 lakh')
             for note in result['notes']:
                 st.warning(note)
-            st.caption(f"Sai số tuyệt đối trung bình trên tập kiểm tra: khoảng {money(report['ann']['mae_inr'])}. Đây không phải biên sai số bảo đảm cho chiếc xe này.")
+            st.caption(f'Sai số phần trăm tuyệt đối trung bình (MAPE): {percent(report["test"]["mape_percent"])}; trung vị: {percent(report["test"]["median_ape_percent"])} trên tập kiểm tra.')
             with st.expander('Khoảng giá của các mẫu lịch sử cùng cấu hình'):
-                low, high = matching.selling_price.min(), matching.selling_price.max()
-                st.markdown(f'<div class="range-track" aria-hidden="true"></div><div class="range-ends"><span>Thấp nhất<br><b>{money(low)}</b></span><span>Cao nhất<br><b>{money(high)}</b></span></div>', unsafe_allow_html=True)
-                st.caption(f'{len(matching):,} mẫu cùng phiên bản, nhiên liệu và hộp số, có thể khác năm và tình trạng. Đây không phải khoảng dự đoán hoặc mức độ tin cậy.')
-            download = pd.DataFrame([{'Xe': r['name'].title(), 'Nam_san_xuat': r['year'], 'Km': r['km_driven'], 'Gia_du_doan_INR': round(price), 'Don_vi': 'INR', 'Ghi_chu': 'Uoc tinh theo du lieu CarDekho lich su'}])
+                nearby, fallback = historical_reference(matching, r['year'])
+                low, high = float(nearby.selling_price.min()), float(nearby.selling_price.max())
+                domain_low, domain_high = min(low, price), max(high, price)
+                span = max(domain_high - domain_low, 1.0)
+                start, band, marker = (low - domain_low) / span * 100, (high - low) / span * 100, (price - domain_low) / span * 100
+                st.markdown(f'<div class="history-track" role="img" aria-label="Khoảng giá lịch sử {money(low)} đến {money(high)}; vạch giá dự đoán {money(price)}"><i style="left:{start:.3f}%;width:{band:.3f}%"></i><b style="left:{marker:.3f}%"></b></div><div class="range-ends"><span>Thấp nhất lịch sử<br><b>{money(low)}</b></span><span>Giá dự đoán<br><b>{money(price)}</b></span><span>Cao nhất lịch sử<br><b>{money(high)}</b></span></div>', unsafe_allow_html=True)
+                st.caption(f'{len(nearby):,} mẫu cùng phiên bản, nhiên liệu và hộp số. ' + ('Có dưới 5 mẫu trong khoảng ±2 năm; đang dùng toàn bộ các năm của cấu hình này.' if fallback else 'Chỉ lấy năm sản xuất trong khoảng ±2 năm so với xe nhập vào.'))
+                st.caption('Dải màu là giá lịch sử, vạch sáng là giá dự đoán; đây là phần đối chiếu riêng với khoảng dự đoán conformal phía trên.')
+            download = pd.DataFrame([{'Xe': r['name'].title(), 'Nam_san_xuat': r['year'], 'Km': r['km_driven'], 'Gia_du_doan_INR': round(price), 'Khoang_thap_INR': round(result['interval_low']), 'Khoang_cao_INR': round(result['interval_high']), 'Muc_phu_muc_tieu': .8, 'Don_vi': 'INR', 'Ghi_chu': 'Uoc tinh theo du lieu CarDekho lich su'}])
             a, b = st.columns(2)
             a.download_button('↓ Tải kết quả CSV', download.to_csv(index=False).encode('utf-8-sig'), 'ket_qua_gia_xe.csv', 'text/csv', on_click='ignore', width='stretch')
             b.button('↻ Dự đoán lại', on_click=clear_result, width='stretch', help='Ẩn kết quả hiện tại; giữ các thông số để bạn chỉnh và dự đoán tiếp.')
@@ -284,7 +313,7 @@ with st.container(key='reference-section'):
         st.markdown('<p class="section-kicker">GÓC NHÌN TỪ DỮ LIỆU LỊCH SỬ</p>', unsafe_allow_html=True)
         st.subheader('Hiểu dữ liệu trước khi đọc mức giá')
         st.caption('Tất cả biểu đồ dùng tập huấn luyện CarDekho tại Ấn Độ. Không phải thống kê thị trường hiện tại.')
-        cards = [('Mẫu ô tô sau xử lý', f"{report['cleaning']['usable_rows']:,}"), ('Mẫu kiểm tra độc lập', f"{report['split']['test_rows']:,}"), ('Sai số trung bình · tập kiểm tra', money(report['ann']['mae_inr']))]
+        cards = [('Mẫu ô tô sau xử lý', f"{report['cleaning']['usable_rows']:,}"), ('Mẫu kiểm tra độc lập', f"{report['split']['test_rows']:,}"), ('MAPE · tập kiểm tra', percent(report['test']['mape_percent']))]
         st.markdown('<div class="mini-grid">' + ''.join(f'<div class="mini-card"><small>{label}</small><strong>{value}</strong></div>' for label, value in cards) + '</div>', unsafe_allow_html=True)
         st.markdown('### Giá trung vị theo năm sản xuất')
         st.caption(f'{name.title()} · {FUEL_LABELS.get(pair[0], pair[0])} · {GEAR_LABELS.get(pair[1], pair[1])}. Mỗi điểm là trung vị các mẫu lịch sử, không phải dự báo khấu hao của một chiếc xe.')
@@ -323,10 +352,11 @@ with st.container(key='about-section'):
     with st.container(key='about-card'):
         st.markdown('<p class="section-kicker">MINH BẠCH VỀ PHẠM VI SỬ DỤNG</p>', unsafe_allow_html=True)
         st.subheader('AI hỗ trợ tham khảo. Bạn quyết định.')
-        st.write('Mô hình ANN được huấn luyện sẵn từ Car details v3.csv trên Kaggle. Website không yêu cầu tải dữ liệu hoặc huấn luyện lại. Thông số gợi ý là trung vị các mẫu cùng cấu hình; khi thiếu thì dùng trung vị tập huấn luyện.')
+        st.write(f'Mô hình {model_label} được chọn bằng GroupKFold 5 lần giữa MLPRegressor, RandomForestRegressor và HistGradientBoostingRegressor trên phần dữ liệu huấn luyện. Tập validation được giữ riêng cho hiệu chỉnh conformal; tập kiểm tra chỉ dùng để báo cáo cuối. Dữ liệu là Car details v3.csv trên Kaggle.')
+        st.write('Website dùng mô hình đã huấn luyện sẵn. Thông số gợi ý là trung vị các mẫu cùng cấu hình; khi thiếu thì dùng trung vị tập huấn luyện.')
         st.write(f"Chỉ hỗ trợ các phiên bản có trong dữ liệu, năm sản xuất {report['cleaning']['year_min']}–{report['cleaning']['year_max']}. Giá bằng rupee Ấn Độ (INR); 1 lakh = ₹1,00,000; 1 crore = 100 lakh.")
         st.warning('Giá chưa tính tình trạng thực tế, tai nạn/ngập nước hoặc biến động thị trường. Không dùng kết quả này như báo giá giao dịch hiện tại.')
-        st.write('Mô hình hiện chưa có khoảng dự đoán được hiệu chỉnh, điểm tin cậy cho từng xe hoặc phân tích mức ảnh hưởng riêng của từng yếu tố. Vì vậy ứng dụng không hiển thị các chỉ số này.')
+        st.write(f'Khoảng dự đoán được hiệu chỉnh bằng split conformal trên phần dư log của tập validation, với mục tiêu phủ 80%. Độ phủ đo được trên tập kiểm tra là {percent(report["conformal"]["test_coverage"] * 100)}; mức này áp dụng cho tổng thể dữ liệu tương tự, không phải xác suất bảo đảm cho từng xe hoặc từng hãng.')
         st.markdown('[Nguồn: Nehal Birla · CarDekho trên Kaggle](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho) · [Giấy phép dữ liệu ODbL](https://opendatacommons.org/licenses/odbl/1.0/)')
 
 st.markdown('<div class="page-footer"><span class="founder-credit">Người sáng lập: Trần Đăng Huy</span><span><a href="https://github.com/danghydzvaio-tech/giaxecu" target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Giá trị tham khảo từ dữ liệu lịch sử</span></div>', unsafe_allow_html=True)

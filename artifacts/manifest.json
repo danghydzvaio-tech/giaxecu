@@ -1,11 +1,12 @@
 {
   "schema_version": 1,
   "sha256": {
-    "ann_bundle.joblib": "18c64df0f68d0cf13612b9272b508b6d6f134e11d991c2950096ab4b851b6432",
-    "evaluation.json": "06bf741acd3de74fcd798831e880bfee90c185bbb1fba941947b5caff105d1b0",
-    "reference.csv": "b980cf720bb31732df0501e5f04cf4cd40d300c60ba40ba1bcd4ed5078df2b00",
-    "training_history.csv": "f17b87f7f05baa57dd7bfe8e066825094789fd9a2ef361b4a773f52e4002b233",
-    "holdout_predictions.csv": "c2b1fd9ab974c79a31ba286cc21bce7865847a8ee0652dd13715f7631015c592",
-    "split_indices.npz": "b3b37227a3ea23cacdf182b7a63138312bb9eb82931843ede7adfd91d50b57a6"
+    "ann_bundle.joblib": "fc89b5bf99d50564024fc5025b4c720ab5637d428b603b9f025760c59fddae14",
+    "evaluation.json": "d7656213f6bede699eb58ec81be472f171e3f0f2fcbf65c84f5a3bc64332a61f",
+    "reference.csv": "7d7dd400cf5cbb73b5433d558a62991bf47345b8f1669fb088edde8ff14535b7",
+    "training_history.csv": "d72dcf0585cddbfbf10a8f8977ac44205b006b42715982e2a41cd18e628606d9",
+    "holdout_predictions.csv": "97fb2a31cc130898761712b819911596944cd7e5b51f5c074c2cfc623627dea1",
+    "split_indices.npz": "ae527365b47ba7e6c22bf2bd5918262c334119ae01459a90e4fd61a7ce561aeb",
+    "verification.json": "79b91aae9632a28226eb1877eb3ff7b825c58c23e8d275cc8d10feaf9dc39683"
   }
 }

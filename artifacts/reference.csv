@@ -310,7 +310,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2009,11.002116507732017,796,46.3,5.0,maruti,maruti alto lxi bsiii,petrol,manual,third owner,individual,60000,125000
 2015,9.99884318585288,1497,117.3,5.0,honda,honda city i vtec vx,petrol,manual,first owner,individual,22000,900000
 2012,11.407576060361786,1598,103.6,5.0,volkswagen,volkswagen vento diesel highline,diesel,manual,first owner,individual,90000,450000
-2011,10.736418414365374,998,67.1,5.0,maruti,maruti alto k10 2010-2014 vxi,petrol,manual,first owner,individual,46000,210000
+2011,10.736418414365376,998,67.1,5.0,maruti,maruti alto k10 2010-2014 vxi,petrol,manual,first owner,individual,46000,210000
 2015,10.596659732783579,1373,93.7,7.0,maruti,maruti ertiga vxi,petrol,manual,second owner,individual,40000,600000
 2014,10.308985993422082,1197,82.85,5.0,hyundai,hyundai i20 magna,petrol,manual,second owner,individual,30000,330000
 2010,10.819798284210286,,,,maruti,maruti estilo lxi,petrol,manual,first owner,individual,50000,160000
@@ -388,7 +388,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2013,11.820417517632333,2523,62.1,7.0,mahindra,mahindra bolero 2011-2019 sle,diesel,manual,second owner,individual,136000,330000
 2006,11.608244735642321,,,,hyundai,hyundai santro xing xg,petrol,manual,second owner,individual,110000,72000
 2013,11.407576060361786,1086,62.1,5.0,hyundai,hyundai santro xing gls,petrol,manual,first owner,individual,90000,200000
-2014,11.418625774449598,1461,84.8,5.0,nissan,nissan sunny diesel xv,diesel,manual,fourth & above owner,individual,91000,320000
+2014,11.418625774449596,1461,84.8,5.0,nissan,nissan sunny diesel xv,diesel,manual,fourth & above owner,individual,91000,320000
 2009,11.407576060361786,1086,62.1,5.0,hyundai,hyundai santro xing gl plus,petrol,manual,fourth & above owner,individual,90000,114999
 2015,10.819798284210286,998,67.04,5.0,maruti,maruti wagon r lxi bs iv,petrol,manual,second owner,individual,50000,320000
 2011,11.695255355062795,2489,95.0,8.0,mahindra,mahindra xylo d2 bs iv,diesel,manual,first owner,individual,120000,200000
@@ -597,7 +597,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2017,10.596659732783579,998,67.04,5.0,maruti,maruti celerio zxi,petrol,manual,second owner,individual,40000,425000
 2011,12.04355959836804,1991,123.7,5.0,chevrolet,chevrolet optra magnum 2.0 ls,diesel,manual,fourth & above owner,individual,170000,272000
 2013,11.156264806643742,1086,68.05,5.0,hyundai,hyundai i10 magna 1.1l,petrol,manual,first owner,individual,70000,310000
-2014,10.736418414365374,1197,81.86,5.0,hyundai,hyundai xcent 1.2 kappa s option,petrol,manual,second owner,individual,46000,450000
+2014,10.736418414365376,1197,81.86,5.0,hyundai,hyundai xcent 1.2 kappa s option,petrol,manual,second owner,individual,46000,450000
 2011,11.289794413577894,1199,73.9,5.0,volkswagen,volkswagen polo diesel highline 1.2l,diesel,manual,second owner,individual,80000,388000
 2011,11.002116507732017,1599,103.2,5.0,hyundai,hyundai verna transform sx vtvt,petrol,manual,first owner,individual,60000,400000
 2009,11.407576060361786,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,first owner,individual,90000,120000
@@ -728,7 +728,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2019,9.210440366976517,1197,81.8,5.0,maruti,maruti swift amt vxi,petrol,automatic,first owner,individual,10000,610000
 2014,11.608244735642321,1248,74.0,5.0,maruti,maruti swift dzire vdi,diesel,manual,first owner,individual,110000,509999
 2014,11.51293546492023,1248,74.0,5.0,maruti,maruti swift dzire vdi,diesel,manual,first owner,individual,100000,511000
-2014,11.418625774449598,1396,88.73,5.0,hyundai,hyundai i20 sportz 1.4 crdi,diesel,manual,first owner,individual,91000,451000
+2014,11.418625774449596,1396,88.73,5.0,hyundai,hyundai i20 sportz 1.4 crdi,diesel,manual,first owner,individual,91000,451000
 2009,11.51293546492023,1197,78.9,5.0,hyundai,hyundai i10 sportz,petrol,manual,first owner,individual,100000,170000
 2016,10.849356503939038,799,53.3,5.0,renault,renault kwid rxt,petrol,manual,first owner,individual,51500,315000
 2016,11.002116507732017,1248,74.0,5.0,chevrolet,chevrolet sail 1.3 ls,diesel,manual,second owner,individual,60000,250000
@@ -1206,7 +1206,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2016,11.608244735642321,1248,73.94,5.0,maruti,maruti ritz vdi,diesel,manual,first owner,individual,110000,475000
 2018,10.275085591132715,1186,73.97,5.0,hyundai,hyundai grand i10 1.2 crdi asta,diesel,manual,first owner,individual,29000,700000
 2002,11.695255355062795,,,,hyundai,hyundai santro gs zipdrive - euro i,petrol,manual,fourth & above owner,individual,120000,100000
-2004,10.736418414365374,796,37.0,4.0,maruti,maruti 800 std bsii,petrol,manual,fourth & above owner,individual,46000,75000
+2004,10.736418414365376,796,37.0,4.0,maruti,maruti 800 std bsii,petrol,manual,fourth & above owner,individual,46000,75000
 2016,11.289794413577894,998,67.04,5.0,maruti,maruti wagon r vxi optional,petrol,manual,first owner,individual,80000,390000
 2010,11.225256725762893,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,second owner,individual,75000,170000
 2010,11.695255355062795,1248,73.9,5.0,maruti,maruti swift dzire ldi,diesel,manual,third owner,individual,120000,215000
@@ -1353,7 +1353,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2013,10.308985993422082,1197,82.85,5.0,hyundai,hyundai i20 asta 1.2,petrol,manual,first owner,individual,30000,360000
 2013,10.819798284210286,1797,147.5,5.0,hyundai,hyundai elantra sx,petrol,manual,second owner,individual,50000,550000
 2016,10.165890277802454,1197,82.0,5.0,hyundai,hyundai grand i10 sportz,petrol,manual,first owner,individual,26000,490000
-2011,10.736418414365374,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,second owner,individual,46000,195000
+2011,10.736418414365376,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,second owner,individual,46000,195000
 2019,9.210440366976517,1199,84.0,5.0,tata,tata tiago 1.2 revotron xz,petrol,manual,first owner,individual,10000,459999
 2018,11.156264806643742,1248,74.02,5.0,maruti,maruti swift dzire vdi,diesel,manual,first owner,individual,70000,680000
 2018,9.90353755128617,1197,81.8,5.0,maruti,maruti swift zxi plus,petrol,manual,first owner,individual,20000,720000
@@ -1374,7 +1374,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2017,11.184435286790631,2179,138.03,7.0,tata,tata safari dicor 2.2 ex 4x2,diesel,manual,first owner,individual,72000,625000
 2014,11.695255355062795,1248,74.0,5.0,maruti,maruti swift vdi bsiv,diesel,manual,first owner,individual,120000,395000
 2014,11.51293546492023,1120,71.0,5.0,hyundai,hyundai xcent 1.1 crdi s,diesel,manual,first owner,individual,100000,490000
-2012,11.904974309480181,,,,toyota,toyota etios gd,diesel,manual,second owner,individual,148000,450000
+2012,11.904974309480183,,,,toyota,toyota etios gd,diesel,manual,second owner,individual,148000,450000
 2018,10.596659732783579,1248,88.5,7.0,maruti,maruti ertiga shvs vdi,diesel,manual,first owner,individual,40000,955000
 2017,10.308985993422082,1199,84.0,5.0,tata,tata tigor 1.2 revotron xz option,petrol,manual,first owner,individual,30000,550000
 2014,11.695255355062795,1405,70.0,5.0,tata,tata indica vista tdi lx,diesel,manual,second owner,individual,120000,200000
@@ -1554,7 +1554,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2012,11.736077016252437,1364,87.2,5.0,toyota,toyota corolla altis diesel d4dg,diesel,manual,second owner,individual,125000,415000
 2012,11.608244735642321,1086,68.05,5.0,hyundai,hyundai i10 magna 1.1l,petrol,manual,first owner,individual,110000,225000
 2013,10.308985993422082,1248,88.76,7.0,maruti,maruti ertiga vdi,diesel,manual,second owner,individual,30000,600000
-2014,11.904974309480181,1248,88.8,7.0,maruti,maruti ertiga zdi,diesel,manual,second owner,individual,148000,620000
+2014,11.904974309480183,1248,88.8,7.0,maruti,maruti ertiga zdi,diesel,manual,second owner,individual,148000,620000
 2016,11.289794413577894,1197,82.0,5.0,hyundai,hyundai grand i10 magna,petrol,manual,second owner,individual,80000,400000
 2005,11.608244735642321,998,67.1,5.0,maruti,maruti wagon r lx,petrol,manual,first owner,individual,110000,110000
 2012,11.461642696843066,1405,70.0,5.0,tata,tata indica vista tdi ls,diesel,manual,second owner,individual,95000,119000
@@ -1917,7 +1917,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2000,11.407576060361786,1489,35.5,5.0,ambassador,ambassador classic 1500 dsl ac,diesel,manual,second owner,individual,90000,75000
 2015,10.819798284210286,1197,83.11,5.0,maruti,maruti swift lxi optional-o,petrol,manual,first owner,individual,50000,400000
 2015,11.608244735642321,1498,98.6,7.0,honda,honda mobilio rs i dtec,diesel,manual,first owner,individual,110000,650000
-2015,11.38336332727755,1248,74.0,5.0,maruti,maruti swift vdi,diesel,manual,first owner,dealer,87847,480000
+2015,11.383363327277548,1248,74.0,5.0,maruti,maruti swift vdi,diesel,manual,first owner,dealer,87847,480000
 2009,10.463131911491967,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,first owner,individual,35000,140000
 2018,8.517393171418904,1197,81.8,5.0,maruti,maruti swift vxi 2018,petrol,manual,first owner,individual,5000,550000
 2017,10.275085591132715,998,67.0,5.0,maruti,maruti wagon r amt vxi,petrol,automatic,first owner,individual,29000,380000
@@ -1968,7 +1968,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2007,14.674366225969685,1197,81.83,5.0,hyundai,hyundai i20 asta 1.2,petrol,manual,second owner,individual,2360457,550000
 2018,9.210440366976517,796,47.3,5.0,maruti,maruti alto 800 vxi,petrol,manual,first owner,individual,10000,310000
 2010,11.156264806643742,998,58.2,5.0,maruti,maruti wagon r lxi lpg bsiv,lpg,manual,second owner,individual,70000,150000
-2012,10.736418414365374,1405,70.0,5.0,tata,tata indica vista tdi lx,diesel,manual,first owner,individual,46000,260000
+2012,10.736418414365376,1405,70.0,5.0,tata,tata indica vista tdi lx,diesel,manual,first owner,individual,46000,260000
 2002,11.695255355062795,1495,94.0,5.0,hyundai,hyundai accent gls,petrol,manual,fourth & above owner,individual,120000,55000
 2013,11.597275804538212,1248,74.0,5.0,maruti,maruti swift vdi,diesel,manual,third owner,individual,108800,450000
 2009,11.156264806643742,1197,78.9,5.0,hyundai,hyundai i10 sportz option,petrol,manual,second owner,individual,70000,199000
@@ -2055,7 +2055,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2019,10.596659732783579,1197,81.8,5.0,maruti,maruti swift vxi,petrol,manual,first owner,individual,40000,550000
 2017,10.308985993422082,999,67.0,5.0,renault,renault kwid 1.0 rxt optional,petrol,manual,first owner,individual,30000,300000
 2011,13.122365377402328,998,67.1,5.0,maruti,maruti wagon r vxi bs iv,petrol,manual,second owner,individual,500000,229999
-2017,10.736418414365374,2179,120.0,7.0,mahindra,mahindra scorpio intelli hybrid s6 plus,diesel,manual,first owner,individual,46000,880000
+2017,10.736418414365376,2179,120.0,7.0,mahindra,mahindra scorpio intelli hybrid s6 plus,diesel,manual,first owner,individual,46000,880000
 2015,11.289794413577894,2523,75.0,9.0,mahindra,mahindra scorpio s2 9 seater,diesel,manual,first owner,individual,80000,720000
 2016,11.407576060361786,1396,88.73,5.0,hyundai,hyundai i20 magna 1.4 crdi,diesel,manual,second owner,individual,90000,550000
 2015,11.407576060361786,2523,75.0,9.0,mahindra,mahindra scorpio s2 9 seater,diesel,manual,first owner,individual,90000,720000
@@ -2108,7 +2108,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2015,10.12667110305036,1364,67.04,5.0,toyota,toyota etios liva gd,diesel,manual,first owner,individual,25000,450000
 2012,11.373674891823535,1248,88.76,7.0,maruti,maruti ertiga vdi,diesel,manual,first owner,individual,87000,459999
 2015,11.289794413577894,998,67.05,5.0,maruti,maruti alto k10 vxi,petrol,manual,second owner,individual,80000,240000
-2011,11.904974309480181,1248,88.8,5.0,tata,tata manza aura (abs) quadrajet bs iv,diesel,manual,second owner,individual,148000,149000
+2011,11.904974309480183,1248,88.8,5.0,tata,tata manza aura (abs) quadrajet bs iv,diesel,manual,second owner,individual,148000,149000
 2018,10.596659732783579,2179,140.0,7.0,mahindra,mahindra scorpio s11 bsiv,diesel,manual,first owner,individual,40000,1500000
 2012,11.156264806643742,1086,62.1,5.0,hyundai,hyundai santro xing gls lpg,lpg,manual,second owner,individual,70000,185000
 2008,10.596659732783579,796,37.0,4.0,maruti,maruti 800 ac,petrol,manual,second owner,individual,40000,65000
@@ -2653,7 +2653,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2017,10.681136714183795,2179,140.0,7.0,mahindra,mahindra xuv500 w6 2wd,diesel,manual,first owner,dealer,43526,1150000
 2012,10.931069180548855,1198,75.0,5.0,skoda,skoda fabia 1.2 mpi ambition plus,petrol,manual,first owner,dealer,55885,320000
 2017,9.90353755128617,1248,74.0,5.0,maruti,maruti baleno delta 1.3,diesel,manual,first owner,individual,20000,600000
-2017,10.736418414365374,1197,81.8,5.0,maruti,maruti swift vvt vxi,petrol,manual,first owner,individual,46000,509999
+2017,10.736418414365376,1197,81.8,5.0,maruti,maruti swift vvt vxi,petrol,manual,first owner,individual,46000,509999
 2018,8.517393171418904,998,67.05,5.0,maruti,maruti wagon r vxi,petrol,manual,first owner,individual,5000,469000
 2017,10.645448706505872,796,47.3,5.0,maruti,maruti alto 800 lx optional,petrol,manual,first owner,individual,42000,250000
 2011,11.134880952438056,995,62.1,5.0,chevrolet,chevrolet spark 1.0 lt,petrol,manual,first owner,dealer,68519,130000
@@ -2792,7 +2792,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2018,10.275085591132715,2179,152.87,7.0,mahindra,mahindra xuv500 w7 bsiv,diesel,manual,first owner,individual,29000,1150000
 2016,11.0937062006294,1197,83.1,5.0,maruti,maruti baleno delta 1.2,petrol,manual,first owner,individual,65755,480000
 2019,7.8636512654486515,1498,98.96,5.0,ford,ford ecosport 1.5 diesel titanium bsiv,diesel,manual,first owner,individual,2600,960000
-2017,10.736418414365374,2179,140.0,7.0,mahindra,mahindra xuv500 at w6 2wd,diesel,automatic,first owner,individual,46000,1050000
+2017,10.736418414365376,2179,140.0,7.0,mahindra,mahindra xuv500 at w6 2wd,diesel,automatic,first owner,individual,46000,1050000
 2017,9.61587214452889,814,55.2,5.0,hyundai,hyundai eon era plus,petrol,manual,second owner,individual,15000,310000
 2017,9.648659816955295,998,67.1,5.0,maruti,maruti alto k10 vxi ags optional,petrol,automatic,first owner,individual,15500,350000
 2015,11.695255355062795,1498,98.6,5.0,honda,honda amaze s i-dtech,diesel,manual,first owner,individual,120000,365000
@@ -2849,7 +2849,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2017,11.002116507732017,1248,74.02,5.0,maruti,maruti swift dzire zdi plus,diesel,manual,first owner,individual,60000,725000
 2014,11.289794413577894,796,34.2,8.0,maruti,maruti omni e mpi std bs iv,petrol,manual,first owner,individual,80000,155000
 2019,8.160803920954665,998,118.35,5.0,hyundai,hyundai venue sx plus turbo dct bsiv,petrol,automatic,first owner,dealer,3500,1125000
-2016,10.736418414365374,1968,187.74,5.0,audi,audi a4 35 tdi premium plus,diesel,automatic,first owner,dealer,46000,1898999
+2016,10.736418414365376,1968,187.74,5.0,audi,audi a4 35 tdi premium plus,diesel,automatic,first owner,dealer,46000,1898999
 2017,10.859018228147887,2354,187.4,5.0,honda,honda cr-v 2.4l 4wd at avn,petrol,automatic,first owner,dealer,52000,1650000
 2011,9.90353755128617,1197,85.8,5.0,maruti,maruti swift vxi,petrol,manual,second owner,individual,20000,280000
 2014,10.596659732783579,2179,140.0,7.0,mahindra,mahindra xuv500 w4,diesel,manual,first owner,individual,40000,650000
@@ -2887,7 +2887,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2016,11.608244735642321,2393,147.8,7.0,toyota,toyota innova crysta 2.4 zx mt bsiv,diesel,manual,first owner,individual,110000,1800000
 2003,11.964886042957495,2179,120.0,7.0,mahindra,mahindra scorpio 2.6 slx turbo 7 seater,diesel,manual,third owner,individual,157138,195000
 2008,11.608244735642321,1086,68.05,5.0,hyundai,hyundai i10 magna 1.1l,petrol,manual,fourth & above owner,individual,110000,185000
-2018,10.736418414365374,2179,152.87,7.0,mahindra,mahindra xuv500 w9 bsiv,diesel,manual,first owner,individual,46000,1525000
+2018,10.736418414365376,2179,152.87,7.0,mahindra,mahindra xuv500 w9 bsiv,diesel,manual,first owner,individual,46000,1525000
 2015,10.819798284210286,796,47.3,5.0,maruti,maruti alto 800 base,petrol,manual,second owner,individual,50000,210000
 1991,11.695255355062795,,,,maruti,maruti omni lpg std bsiv,lpg,manual,second owner,individual,120000,55000
 2009,12.560247968016562,2494,102.0,8.0,toyota,toyota innova 2.5 g (diesel) 7 seater bs iv,diesel,manual,third owner,individual,285000,530000
@@ -2933,7 +2933,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 1997,11.51293546492023,,,,mahindra,mahindra jeep cl 500 mdi,diesel,manual,fourth & above owner,individual,100000,160000
 2012,11.695255355062795,1498,88.7,5.0,ford,ford fiesta diesel style,diesel,manual,first owner,individual,120000,390000
 2010,11.608244735642321,1396,90.0,5.0,hyundai,hyundai i20 asta 1.4 crdi (diesel),diesel,manual,first owner,individual,110000,340000
-2014,10.736418414365374,998,67.04,5.0,maruti,maruti celerio zxi optional,petrol,manual,first owner,dealer,46000,415000
+2014,10.736418414365376,998,67.04,5.0,maruti,maruti celerio zxi optional,petrol,manual,first owner,dealer,46000,415000
 2014,11.532737896139919,1498,93.87,7.0,maruti,maruti ertiga 1.5 zdi,diesel,manual,first owner,dealer,102000,700000
 2017,9.90353755128617,999,67.0,5.0,renault,renault kwid 1.0 rxt amt opt,petrol,automatic,first owner,dealer,20000,375000
 2015,9.680406499268875,1197,85.8,5.0,maruti,maruti swift dzire vxi,petrol,manual,first owner,dealer,16000,575000
@@ -3027,7 +3027,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2012,11.884495917930655,1248,74.0,5.0,maruti,maruti swift vdi,diesel,manual,third owner,individual,145000,350000
 2018,11.156264806643742,1493,100.0,7.0,mahindra,mahindra tuv 300 mhawk100 t8 dual tone,diesel,manual,second owner,individual,70000,800000
 2015,10.12667110305036,796,34.2,5.0,maruti,maruti omni mpi std bsiv,petrol,manual,second owner,individual,25000,180000
-2013,11.423011698301426,1198,76.0,5.0,nissan,nissan micra xv cvt,petrol,automatic,second owner,individual,91400,310000
+2013,11.423011698301428,1198,76.0,5.0,nissan,nissan micra xv cvt,petrol,automatic,second owner,individual,91400,310000
 2010,12.128116509451258,1493,110.0,5.0,hyundai,hyundai verna transform sx vgt crdi at bs iii,diesel,automatic,fourth & above owner,individual,185000,245000
 2017,11.111761095413756,2179,140.0,7.0,mahindra,mahindra xuv500 w10 2wd,diesel,manual,first owner,individual,66953,1500000
 2011,11.782960235741939,1598,103.6,5.0,volkswagen,volkswagen vento diesel comfortline,diesel,manual,fourth & above owner,individual,131000,280000
@@ -3076,7 +3076,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2006,11.849404844423074,1599,94.0,5.0,hyundai,hyundai accent gls 1.6 abs,petrol,manual,second owner,individual,140000,110000
 2007,11.608244735642321,1497,78.0,5.0,honda,honda city 2017-2020 exi,petrol,manual,third owner,individual,110000,170000
 2018,10.596659732783579,1198,108.5,5.0,tata,tata nexon 1.2 revotron xz plus,petrol,manual,second owner,individual,40000,850000
-2010,11.904974309480181,1396,90.0,5.0,hyundai,hyundai i20 asta 1.4 crdi (diesel),diesel,manual,second owner,individual,148000,350000
+2010,11.904974309480183,1396,90.0,5.0,hyundai,hyundai i20 asta 1.4 crdi (diesel),diesel,manual,second owner,individual,148000,350000
 2015,11.951186847493476,1248,74.0,5.0,tata,tata indica vista quadrajet ls,diesel,manual,second owner,individual,155000,250000
 2015,11.156264806643742,1498,99.0,5.0,ford,ford figo aspire 1.5 tdci titanium,diesel,manual,first owner,individual,70000,433000
 2010,11.51293546492023,2982,171.0,7.0,toyota,toyota fortuner 3.0 diesel,diesel,manual,first owner,individual,100000,1200000
@@ -3201,7 +3201,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2012,11.695255355062795,1598,103.6,5.0,volkswagen,volkswagen vento diesel highline,diesel,manual,second owner,individual,120000,280000
 2018,10.819798284210286,1493,100.0,7.0,mahindra,mahindra tuv 300 t10,diesel,manual,second owner,individual,50000,775000
 2012,11.51293546492023,1582,126.32,5.0,hyundai,hyundai verna 1.6 sx,diesel,manual,second owner,individual,100000,420000
-2010,11.418625774449598,1497,118.0,5.0,honda,honda city 1.5 v mt exclusive,petrol,manual,second owner,individual,91000,310000
+2010,11.418625774449596,1497,118.0,5.0,honda,honda city 1.5 v mt exclusive,petrol,manual,second owner,individual,91000,310000
 2017,10.819798284210286,1956,170.0,5.0,jeep,jeep compass 2.0 longitude option bsiv,diesel,manual,first owner,individual,50000,1550000
 2015,11.112462823634855,1248,91.7,5.0,fiat,fiat linea 1.3 multijet active,diesel,manual,first owner,individual,67000,375000
 2015,10.596659732783579,1197,82.0,5.0,hyundai,hyundai grand i10 sportz,petrol,manual,first owner,individual,40000,500000
@@ -3295,7 +3295,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2012,11.695255355062795,2523,62.1,7.0,mahindra,mahindra bolero 2011-2019 slx,diesel,manual,first owner,individual,120000,430000
 2010,11.695255355062795,1248,75.0,5.0,maruti,maruti swift vdi bsiii,diesel,manual,second owner,individual,120000,360000
 2016,12.25486757159303,1248,74.0,5.0,maruti,maruti swift vdi deca,diesel,manual,first owner,individual,210000,210000
-2010,11.904974309480181,1396,69.0,5.0,tata,tata indigo ecs le tdi bsiii,diesel,manual,second owner,individual,148000,135000
+2010,11.904974309480183,1396,69.0,5.0,tata,tata indigo ecs le tdi bsiii,diesel,manual,second owner,individual,148000,135000
 2017,10.900233214800668,1493,100.0,7.0,mahindra,mahindra tuv 300 t6 plus,diesel,manual,first owner,individual,54188,700000
 2012,11.407576060361786,1598,103.5,5.0,skoda,skoda rapid 1.6 tdi elegance,diesel,manual,first owner,individual,90000,425000
 2011,11.51293546492023,1199,79.4,5.0,chevrolet,chevrolet beat lt,petrol,manual,third owner,individual,100000,150000
@@ -3563,7 +3563,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2015,10.819798284210286,1582,126.2,5.0,hyundai,hyundai creta 1.6 crdi sx option,diesel,manual,first owner,individual,50000,1000000
 2018,10.668978650219241,1498,98.63,5.0,honda,honda amaze s diesel bsiv,diesel,manual,first owner,individual,43000,700000
 2007,11.002116507732017,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,first owner,individual,60000,135000
-2012,11.904974309480181,2179,120.0,9.0,mahindra,mahindra scorpio lx,diesel,manual,second owner,individual,148000,430000
+2012,11.904974309480183,2179,120.0,9.0,mahindra,mahindra scorpio lx,diesel,manual,second owner,individual,148000,430000
 2012,11.156264806643742,1248,73.94,5.0,maruti,maruti ritz vdi,diesel,manual,second owner,individual,70000,220000
 2011,11.156264806643742,2179,138.03,7.0,tata,tata safari dicor 2.2 ex 4x2,diesel,manual,first owner,individual,70000,300000
 2013,11.695255355062795,1199,73.9,5.0,volkswagen,volkswagen polo diesel highline 1.2l,diesel,manual,third owner,individual,120000,250000
@@ -3596,7 +3596,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2011,11.082157933374816,1598,103.6,5.0,volkswagen,volkswagen vento diesel highline,diesel,manual,second owner,individual,65000,295000
 2007,11.695255355062795,1497,78.0,5.0,honda,honda city 2017-2020 gxi,petrol,manual,third owner,individual,120000,160000
 2016,9.90353755128617,1198,67.0,7.0,datsun,datsun go plus a,petrol,manual,first owner,individual,20000,385000
-2011,11.44572741040675,1388,67.0,5.0,ford,ford fiesta classic 1.4 duratorq lxi,diesel,manual,second owner,individual,93500,350000
+2011,11.445727410406752,1388,67.0,5.0,ford,ford fiesta classic 1.4 duratorq lxi,diesel,manual,second owner,individual,93500,350000
 2019,11.156264806643742,1248,74.02,5.0,maruti,maruti swift dzire ldi,diesel,manual,first owner,individual,70000,558000
 2010,10.933124826700707,1086,62.1,5.0,hyundai,hyundai santro xing gls,petrol,manual,third owner,individual,56000,165000
 2012,11.289794413577894,1396,88.76,5.0,hyundai,hyundai i20 sportz 1.4 crdi,diesel,manual,second owner,individual,80000,300000
@@ -4033,11 +4033,11 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2017,10.308985993422082,1493,100.0,7.0,mahindra,mahindra tuv 300 t4,diesel,manual,second owner,individual,30000,600000
 2016,11.156264806643742,1248,88.5,5.0,maruti,maruti vitara brezza vdi,diesel,manual,first owner,individual,70000,750000
 2016,10.596659732783579,1197,81.8,5.0,maruti,maruti swift vxi optional,petrol,manual,first owner,individual,40000,500000
-2015,10.736418414365374,1498,98.6,7.0,honda,honda mobilio rs option i dtec,diesel,manual,first owner,individual,46000,1000000
+2015,10.736418414365376,1498,98.6,7.0,honda,honda mobilio rs option i dtec,diesel,manual,first owner,individual,46000,1000000
 2018,10.305613759378778,1498,108.6,5.0,volkswagen,volkswagen vento 1.5 tdi highline plus at bsiv,diesel,automatic,first owner,dealer,29899,1290000
 2020,7.601402334583733,1197,81.86,5.0,hyundai,hyundai grand i10 nios sportz,petrol,manual,first owner,dealer,2000,775000
 2018,10.34177474101152,1197,81.86,5.0,hyundai,hyundai elite i20 asta option cvt bsiv,petrol,automatic,first owner,dealer,31000,730000
-2016,10.736418414365374,2776,197.2,7.0,chevrolet,chevrolet trailblazer ltz 4x2 at,diesel,automatic,second owner,dealer,46000,1295000
+2016,10.736418414365376,2776,197.2,7.0,chevrolet,chevrolet trailblazer ltz 4x2 at,diesel,automatic,second owner,dealer,46000,1295000
 2017,11.002116507732017,1950,194.0,5.0,mercedes-benz,mercedes-benz glc 220d 4matic,diesel,automatic,first owner,dealer,60000,3300000
 2016,9.210440366976517,998,67.04,5.0,maruti,maruti celerio zxi optional amt bsiv,petrol,automatic,first owner,dealer,10000,434999
 2018,8.699681400989514,2143,170.0,5.0,mercedes-benz,mercedes-benz gl-class 220d 4matic sport,diesel,automatic,first owner,dealer,6000,4600000
@@ -4063,7 +4063,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2018,9.959300617355341,1197,83.1,5.0,maruti,maruti baleno zeta automatic,petrol,automatic,first owner,dealer,21147,775000
 2018,9.680406499268875,1248,74.0,5.0,maruti,maruti swift amt vdi,diesel,automatic,first owner,dealer,16000,790000
 2016,11.021477541630475,793,47.0,5.0,maruti,maruti celerio vdi,diesel,manual,first owner,dealer,61173,375000
-2016,11.255733799516445,,,,maruti,maruti swift vdi bsiv w abs,diesel,manual,first owner,dealer,77321,595000
+2016,11.255733799516447,,,,maruti,maruti swift vdi bsiv w abs,diesel,manual,first owner,dealer,77321,595000
 2017,10.839600519357369,1197,81.8,5.0,maruti,maruti baleno alpha cvt,petrol,automatic,first owner,dealer,51000,750000
 2018,9.741027444837728,1197,81.8,5.0,maruti,maruti baleno alpha,petrol,manual,first owner,dealer,17000,775000
 2008,11.51293546492023,1248,75.0,5.0,maruti,maruti swift vdi bsiii,diesel,manual,second owner,individual,100000,260000
@@ -4094,7 +4094,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2011,12.07254696717504,1396,69.0,5.0,tata,tata indigo ecs lx bsiv,diesel,manual,second owner,individual,175000,210000
 2014,11.608244735642321,1248,73.94,5.0,maruti,maruti ritz zdi,diesel,manual,third owner,individual,110000,375000
 2020,6.90875477931522,1197,81.8,5.0,maruti,maruti swift lxi,petrol,manual,first owner,individual,1000,445000
-2009,11.418625774449598,,,,maruti,maruti swift 1.3 vxi,petrol,manual,second owner,individual,91000,198000
+2009,11.418625774449596,,,,maruti,maruti swift 1.3 vxi,petrol,manual,second owner,individual,91000,198000
 2017,10.933124826700707,1498,99.0,5.0,ford,ford figo 1.5d trend mt,diesel,manual,first owner,individual,56000,495000
 2013,12.278397958261774,2494,100.0,7.0,toyota,toyota innova 2.5 g (diesel) 7 seater,diesel,manual,first owner,individual,215000,830000
 2003,11.695255355062795,2179,120.0,7.0,mahindra,mahindra scorpio 2.6 slx turbo 7 seater,diesel,manual,second owner,individual,120000,200000
@@ -4217,7 +4217,7 @@ year,log_km,engine_cc,power_bhp,seats,brand,name,fuel,transmission,owner,seller_
 2007,11.289794413577894,1061,64.0,5.0,maruti,maruti wagon r lx bsiii,petrol,manual,second owner,individual,80000,100000
 2017,10.819798284210286,1186,73.97,5.0,hyundai,hyundai grand i10 1.2 crdi sportz,diesel,manual,first owner,individual,50000,600000
 2008,11.289794413577894,995,63.0,5.0,chevrolet,chevrolet spark 1.0 ps,petrol,manual,first owner,individual,80000,75527
-2017,10.736418414365374,1197,83.1,5.0,maruti,maruti baleno delta 1.2,petrol,manual,first owner,individual,46000,550000
+2017,10.736418414365376,1197,83.1,5.0,maruti,maruti baleno delta 1.2,petrol,manual,first owner,individual,46000,550000
 2015,11.002116507732017,1120,71.0,5.0,hyundai,hyundai xcent 1.1 crdi sx,diesel,manual,first owner,individual,60000,425000
 2011,10.596659732783579,995,62.0,5.0,chevrolet,chevrolet spark 1.0 ls,petrol,manual,second owner,individual,40000,150000
 2011,11.407576060361786,796,46.3,5.0,maruti,maruti alto lxi,petrol,manual,first owner,individual,90000,225000

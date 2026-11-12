@@ -77,8 +77,45 @@ def prediction_frame(row):
     return pd.DataFrame([row])[FEATURES]
 
 
+def predicted_log_prices(bundle, frame):
+    """Canonical log1p(INR) predictions used in calibration and inference."""
+    transformed = bundle['preprocessor'].transform(frame[FEATURES]).astype(np.float32)
+    scaled = bundle['model'].predict(transformed)
+    log_price = bundle['target_scaler'].inverse_transform(np.asarray(scaled).reshape(-1, 1)).ravel()
+    return np.maximum(0, log_price)
+
+
+def conformal_quantile(residuals, coverage=.8):
+    """Finite-sample split-conformal order statistic, not interpolated quantiles."""
+    values = np.asarray(residuals, dtype=float).ravel()
+    if not 0 < coverage < 1 or not len(values):
+        raise ValueError('Cần mức bao phủ trong (0, 1) và mẫu hiệu chỉnh không rỗng.')
+    if not np.isfinite(values).all() or (values < 0).any():
+        raise ValueError('Phần dư hiệu chỉnh phải hữu hạn và không âm.')
+    rank = int(np.ceil((len(values) + 1) * coverage))
+    if rank > len(values):
+        raise ValueError('Không đủ mẫu hiệu chỉnh cho mức bao phủ đã chọn.')
+    return float(np.sort(values)[rank - 1]), rank
+
+
+def intervals_from_log(log_price, radius):
+    """Transform a symmetric interval on log1p(INR) back to nonnegative INR."""
+    log_price = np.asarray(log_price, dtype=float)
+    if not np.isfinite(radius) or radius < 0:
+        raise ValueError('Bán kính khoảng dự đoán phải hữu hạn và không âm.')
+    return (np.maximum(0, np.expm1(log_price - radius)),
+            np.maximum(0, np.expm1(log_price)),
+            np.maximum(0, np.expm1(log_price + radius)))
+
+
 def estimate(bundle, row):
-    transformed = bundle['preprocessor'].transform(prediction_frame(row))
-    scaled_log_price = bundle['model'].predict(transformed)
-    log_price = bundle['target_scaler'].inverse_transform(scaled_log_price.reshape(-1, 1)).ravel()
-    return float(np.maximum(0, np.expm1(log_price))[0])
+    # Match the float64 inverse used by interval centers and saved holdout values.
+    return float(np.expm1(predicted_log_prices(bundle, prediction_frame(row)).astype(float))[0])
+
+
+def estimate_interval(bundle, row):
+    if 'conformal' not in bundle:
+        raise ValueError('Phiên bản mô hình này chưa có khoảng dự đoán hiệu chỉnh.')
+    values = intervals_from_log(predicted_log_prices(bundle, prediction_frame(row)),
+                                bundle['conformal']['log_residual_quantile'])
+    return tuple(float(value[0]) for value in values)
