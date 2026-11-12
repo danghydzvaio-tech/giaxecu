@@ -13,7 +13,7 @@ from streamlit.testing.v1 import AppTest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from car_model import clean_v3
-from service import load_assets, predict_vehicle, prediction_interval
+from service import load_assets, predict_vehicle
 
 
 class ModelTests(unittest.TestCase):
@@ -26,28 +26,20 @@ class ModelTests(unittest.TestCase):
         for sample in self.samples:
             price, _, _ = predict_vehicle(self.bundle, self.reference, sample['inputs'])
             self.assertAlmostEqual(price, sample['expected_prediction_inr'], delta=2.0)
-            low, central, high = prediction_interval(self.bundle, sample['inputs'])
-            self.assertLessEqual(low, central)
-            self.assertLessEqual(central, high)
-            self.assertAlmostEqual(central, price, delta=.01)
-            self.assertAlmostEqual(low, sample['expected_interval_inr']['low'], delta=2.)
-            self.assertAlmostEqual(high, sample['expected_interval_inr']['high'], delta=2.)
 
     def test_holdout_metrics_match_report(self):
         holdout = pd.read_csv(ROOT / 'artifacts/holdout_predictions.csv')
         report = self.bundle['report']
         self.assertEqual(len(holdout), report['split']['test_rows'])
-        actual, prediction = holdout.selling_price, holdout.selected_prediction_inr
-        self.assertAlmostEqual(mean_absolute_error(actual, prediction), report['test']['mae_inr'], delta=1.)
-        self.assertAlmostEqual(r2_score(actual, prediction), report['test']['r2'], delta=1e-5)
-        percentage = np.abs(actual - prediction) / actual * 100
-        self.assertAlmostEqual(percentage.mean(), report['test']['mape_percent'], places=6)
-        self.assertAlmostEqual(np.median(percentage), report['test']['median_ape_percent'], places=6)
-        self.assertLess(report['test']['mae_inr'], report['median_baseline']['mae_inr'])
+        self.assertAlmostEqual(mean_absolute_error(holdout.selling_price, holdout.ann_prediction_inr),
+                               report['ann']['mae_inr'], delta=1.)
+        self.assertAlmostEqual(r2_score(holdout.selling_price, holdout.ann_prediction_inr),
+                               report['ann']['r2'], delta=1e-5)
+        self.assertLess(report['ann']['mae_inr'], report['median_baseline']['mae_inr'])
 
     def test_invalid_inputs_rejected(self):
         row = self.samples[0]['inputs']
-        for key, value in [('year', 2021), ('year', 2026), ('km_driven', -10), ('engine_cc', float('nan')),
+        for key, value in [('year', 2026), ('km_driven', -10), ('engine_cc', float('nan')),
                            ('name', 'bajaj pulsar 150'), ('seats', 5.5)]:
             with self.subTest(key=key, value=value):
                 invalid = {**row, key: value}
@@ -83,13 +75,13 @@ class WebTests(unittest.TestCase):
         self.assertFalse(at.metric)
         at.button[0].click().run()
         self.assertFalse(at.exception)
-        self.assertEqual(len(at.metric), 1)
+        self.assertEqual(len(at.metric), 2)
         self.assertTrue(at.metric[0].value.startswith('₹'))
         at.selectbox[0].select('honda').run()
         self.assertFalse(at.exception)
         at.button[0].click().run()
         self.assertFalse(at.exception)
-        self.assertEqual(len(at.metric), 1)
+        self.assertEqual(len(at.metric), 2)
 
 
 if __name__ == '__main__':

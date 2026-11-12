@@ -1,19 +1,9 @@
 {
-  "created_utc": "2026-11-12T12:19:29.179549+00:00",
   "source_sha_verified": true,
-  "train_calibration_test_groups_disjoint": true,
-  "cv_fold_groups_disjoint": true,
-  "calibration_excluded_from_selection": true,
-  "interval_bounds_ordered": true,
-  "selected_model": "mlp",
-  "test_rows": 1380,
-  "test_metrics": {
-    "n": 1380,
-    "mae_inr": 79468.31986648266,
-    "rmse_inr": 150432.18287235269,
-    "r2": 0.90843522369813,
-    "mape_percent": 16.285041616284737,
-    "median_ape_percent": 12.056030825580418
-  },
-  "test_interval_coverage": 0.7898550724637681
+  "passenger_filter_verified": true,
+  "train_validation_test_groups_disjoint": true,
+  "saved_ann_metrics_recomputed": true,
+  "streamlit_form_and_report_tests_passed": true,
+  "desktop_browser_prediction_passed": true,
+  "mobile_page_overflow": false
 }

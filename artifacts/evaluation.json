@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-11-12T12:19:29.179549+00:00",
+  "created_utc": "2026-11-09T16:20:58.775940+00:00",
   "source_url": "https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho",
   "source_dataset_version": 4,
   "source_file": "Car details v3.csv",
@@ -7,7 +7,7 @@
   "dataset_listing_updated": "2023-01-14",
   "observation_date": "not available per listing",
   "currency": "INR",
-  "price_unit_note": "v3 selling_price is numeric INR; no lakh multiplication.",
+  "price_unit_note": "v3 selling_price is treated as numeric INR; no lakh multiplication.",
   "license_name": "Database: Open Database, Contents: Database Contents",
   "license_url": "https://opendatacommons.org/licenses/dbcl/1.0/",
   "cleaning": {
@@ -88,410 +88,36 @@
       "fuel",
       "transmission"
     ],
-    "group_overlap": 0,
-    "validation_role": "split-conformal calibration only; excluded from model/epoch selection"
+    "group_overlap": 0
   },
-  "cross_validation": {
-    "method": "GroupKFold",
-    "n_splits": 5,
-    "seed": 42,
-    "selection_data": "4423 fitting-development rows; calibration excluded",
-    "selection_metric": "mean_mae_inr",
-    "std_ddof": 1,
-    "models": {
-      "mlp": {
-        "label": "Mạng nơ-ron ANN (MLP)",
-        "folds": [
-          {
-            "fold": 1,
-            "fit_rows": 3548,
-            "validation_rows": 875,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": 8,
-            "n": 875,
-            "mae_inr": 76008.51688839286,
-            "rmse_inr": 159931.0991000872,
-            "r2": 0.8847674337182552,
-            "mape_percent": 16.527254599703458,
-            "median_ape_percent": 11.52346714092141
-          },
-          {
-            "fold": 2,
-            "fit_rows": 3539,
-            "validation_rows": 884,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": 14,
-            "n": 884,
-            "mae_inr": 80559.87995793269,
-            "rmse_inr": 145894.9363918044,
-            "r2": 0.9076742835621556,
-            "mape_percent": 18.495026001515964,
-            "median_ape_percent": 13.319589531250001
-          },
-          {
-            "fold": 3,
-            "fit_rows": 3528,
-            "validation_rows": 895,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": 5,
-            "n": 895,
-            "mae_inr": 82228.6391847067,
-            "rmse_inr": 199530.0149421994,
-            "r2": 0.9067985225376197,
-            "mape_percent": 15.426643255459465,
-            "median_ape_percent": 11.628409926470589
-          },
-          {
-            "fold": 4,
-            "fit_rows": 3533,
-            "validation_rows": 890,
-            "fit_groups": 3331,
-            "validation_groups": 832,
-            "group_overlap": 0,
-            "mlp_epochs": 10,
-            "n": 890,
-            "mae_inr": 82059.15283532304,
-            "rmse_inr": 161030.39648330383,
-            "r2": 0.9055583384409427,
-            "mape_percent": 17.30684025747327,
-            "median_ape_percent": 13.537878472222221
-          },
-          {
-            "fold": 5,
-            "fit_rows": 3544,
-            "validation_rows": 879,
-            "fit_groups": 3331,
-            "validation_groups": 832,
-            "group_overlap": 0,
-            "mlp_epochs": 23,
-            "n": 879,
-            "mae_inr": 82592.14530450085,
-            "rmse_inr": 157793.1444437982,
-            "r2": 0.8716937044018392,
-            "mape_percent": 19.69243796711274,
-            "median_ape_percent": 13.64346590909091
-          }
-        ],
-        "mean": {
-          "mae_inr": 80689.66683417124,
-          "rmse_inr": 164835.9182722386,
-          "r2": 0.8952984565321624,
-          "mape_percent": 17.48964041625298,
-          "median_ape_percent": 12.730562195991023
-        },
-        "std": {
-          "mae_inr": 2729.164779801497,
-          "rmse_inr": 20313.671804573194,
-          "r2": 0.016269331226492788,
-          "mape_percent": 1.6642323206598908,
-          "median_ape_percent": 1.0611225256920402
-        }
-      },
-      "random_forest": {
-        "label": "Random Forest",
-        "folds": [
-          {
-            "fold": 1,
-            "fit_rows": 3548,
-            "validation_rows": 875,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 875,
-            "mae_inr": 80141.30215177109,
-            "rmse_inr": 157214.41904769157,
-            "r2": 0.8886489951369176,
-            "mape_percent": 17.665926742899543,
-            "median_ape_percent": 12.488193764838979
-          },
-          {
-            "fold": 2,
-            "fit_rows": 3539,
-            "validation_rows": 884,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 884,
-            "mae_inr": 83109.46439611101,
-            "rmse_inr": 169104.80970153378,
-            "r2": 0.8759621675178912,
-            "mape_percent": 18.799128612053686,
-            "median_ape_percent": 12.674387563549356
-          },
-          {
-            "fold": 3,
-            "fit_rows": 3528,
-            "validation_rows": 895,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 895,
-            "mae_inr": 90522.80701609606,
-            "rmse_inr": 291164.0994866835,
-            "r2": 0.8015358914459542,
-            "mape_percent": 16.54162978448459,
-            "median_ape_percent": 12.377903089292616
-          },
-          {
-            "fold": 4,
-            "fit_rows": 3533,
-            "validation_rows": 890,
-            "fit_groups": 3331,
-            "validation_groups": 832,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 890,
-            "mae_inr": 81887.0121817429,
-            "rmse_inr": 164001.3622256043,
-            "r2": 0.9020413467960601,
-            "mape_percent": 17.550290919222277,
-            "median_ape_percent": 12.97741909585809
-          },
-          {
-            "fold": 5,
-            "fit_rows": 3544,
-            "validation_rows": 879,
-            "fit_groups": 3331,
-            "validation_groups": 832,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 879,
-            "mae_inr": 83376.99809122665,
-            "rmse_inr": 176915.32438576216,
-            "r2": 0.8387117940673091,
-            "mape_percent": 18.45461701992634,
-            "median_ape_percent": 12.777604884936022
-          }
-        ],
-        "mean": {
-          "mae_inr": 83807.51676738956,
-          "rmse_inr": 191680.00296945506,
-          "r2": 0.8613800389928263,
-          "mape_percent": 17.802318615717287,
-          "median_ape_percent": 12.659101679695013
-        },
-        "std": {
-          "mae_inr": 3965.3881915649085,
-          "rmse_inr": 56077.41116775153,
-          "r2": 0.040941261941329576,
-          "mape_percent": 0.8790023334576562,
-          "median_ape_percent": 0.23658233658447095
-        }
-      },
-      "hist_gradient_boosting": {
-        "label": "HistGradientBoosting",
-        "folds": [
-          {
-            "fold": 1,
-            "fit_rows": 3548,
-            "validation_rows": 875,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 875,
-            "mae_inr": 78367.02695207794,
-            "rmse_inr": 151198.1787524216,
-            "r2": 0.8970082328166764,
-            "mape_percent": 17.198216283961997,
-            "median_ape_percent": 12.721804521433228
-          },
-          {
-            "fold": 2,
-            "fit_rows": 3539,
-            "validation_rows": 884,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 884,
-            "mae_inr": 77991.16031256031,
-            "rmse_inr": 148888.96901861118,
-            "r2": 0.9038460136921416,
-            "mape_percent": 17.900628217907286,
-            "median_ape_percent": 12.424273333226717
-          },
-          {
-            "fold": 3,
-            "fit_rows": 3528,
-            "validation_rows": 895,
-            "fit_groups": 3330,
-            "validation_groups": 833,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 895,
-            "mae_inr": 91726.59364368713,
-            "rmse_inr": 317326.40181555797,
-            "r2": 0.7642678911705345,
-            "mape_percent": 15.644048837479382,
-            "median_ape_percent": 11.956453952867701
-          },
-          {
-            "fold": 4,
-            "fit_rows": 3533,
-            "validation_rows": 890,
-            "fit_groups": 3331,
-            "validation_groups": 832,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 890,
-            "mae_inr": 85041.7189469741,
-            "rmse_inr": 168383.1159324664,
-            "r2": 0.8967369428166087,
-            "mape_percent": 17.90252661917134,
-            "median_ape_percent": 13.320911807571122
-          },
-          {
-            "fold": 5,
-            "fit_rows": 3544,
-            "validation_rows": 879,
-            "fit_groups": 3331,
-            "validation_groups": 832,
-            "group_overlap": 0,
-            "mlp_epochs": null,
-            "n": 879,
-            "mae_inr": 83371.86210162581,
-            "rmse_inr": 172529.45902411678,
-            "r2": 0.8466095837083476,
-            "mape_percent": 17.843885095761898,
-            "median_ape_percent": 12.616792775583674
-          }
-        ],
-        "mean": {
-          "mae_inr": 83299.67239138506,
-          "rmse_inr": 191665.22490863476,
-          "r2": 0.8616937328408618,
-          "mape_percent": 17.297861010856376,
-          "median_ape_percent": 12.608047278136487
-        },
-        "std": {
-          "mae_inr": 5625.038463636272,
-          "rmse_inr": 71004.14672499096,
-          "r2": 0.05910008763769913,
-          "mape_percent": 0.9710966586132874,
-          "median_ape_percent": 0.49485850397276926
-        }
-      }
-    }
-  },
-  "selected_model": {
-    "name": "mlp",
-    "label": "Mạng nơ-ron ANN (MLP)",
+  "ann": {
     "implementation": "sklearn.neural_network.MLPRegressor",
-    "selection_metric": "mean_cv_mae_inr",
-    "cv_mae_inr_mean": 80689.66683417124,
-    "mlp_epochs": 12,
-    "parameters": {
-      "activation": "relu",
-      "alpha": 0.01,
-      "batch_size": 64,
-      "beta_1": 0.9,
-      "beta_2": 0.999,
-      "early_stopping": false,
-      "epsilon": 1e-08,
-      "hidden_layer_sizes": [
-        128,
-        64
-      ],
-      "learning_rate": "constant",
-      "learning_rate_init": 0.001,
-      "loss": "squared_error",
-      "max_fun": 15000,
-      "max_iter": 1,
-      "momentum": 0.9,
-      "n_iter_no_change": 10,
-      "nesterovs_momentum": true,
-      "power_t": 0.5,
-      "random_state": 42,
-      "shuffle": true,
-      "solver": "adam",
-      "tol": 0.0001,
-      "validation_fraction": 0.1,
-      "verbose": false,
-      "warm_start": false
-    },
-    "target": "standardized log1p(INR)"
+    "hidden_layers": [
+      128,
+      64
+    ],
+    "activation": "relu",
+    "optimizer": "adam",
+    "l2_alpha": 0.01,
+    "learning_rate": 0.001,
+    "batch_size": 64,
+    "epochs_run": 34,
+    "best_epoch": 4,
+    "patience": 30,
+    "target": "standardized log1p(INR)",
+    "mae_inr": 79131.2109375,
+    "rmse_inr": 153497.13222076822,
+    "r2": 0.9046660661697388
   },
-  "test": {
-    "n": 1380,
-    "mae_inr": 79468.31986648266,
-    "rmse_inr": 150432.18287235269,
-    "r2": 0.90843522369813,
-    "mape_percent": 16.285041616284737,
-    "median_ape_percent": 12.056030825580418
+  "random_forest": {
+    "mae_inr": 82004.25952634602,
+    "rmse_inr": 170583.44583143995,
+    "r2": 0.8822609059249855
   },
-  "conformal": {
-    "nominal_coverage": 0.8,
-    "log_residual_quantile": 0.24282679257416362,
-    "calibration_rows": 1101,
-    "quantile_rank": 882,
-    "method": "split conformal; absolute log1p(INR) residuals",
-    "test_coverage": 0.7898550724637681,
-    "mean_width_inr": 253832.04806803766,
-    "median_width_inr": 204178.6493321388
-  },
-  "price_segments": [
-    {
-      "segment": "below_3_lakh",
-      "label": "Dưới 3 lakh",
-      "n": 438,
-      "mae_inr": 34645.23230892228,
-      "rmse_inr": 48303.58734319102,
-      "r2": 0.4649769779583921,
-      "mape_percent": 20.226967411910916,
-      "median_ape_percent": 14.694473780671043,
-      "coverage": 0.7077625570776256
-    },
-    {
-      "segment": "3_to_6_lakh",
-      "label": "3–6 lakh",
-      "n": 519,
-      "mae_inr": 64766.09129455162,
-      "rmse_inr": 88745.42202604646,
-      "r2": -0.0729546066212099,
-      "mape_percent": 15.1026571294311,
-      "median_ape_percent": 12.243778193079846,
-      "coverage": 0.815028901734104
-    },
-    {
-      "segment": "6_to_10_lakh",
-      "label": "6–10 lakh",
-      "n": 327,
-      "mae_inr": 94675.48007284873,
-      "rmse_inr": 130401.56145219476,
-      "r2": -0.17081427182897468,
-      "mape_percent": 12.468464791866635,
-      "median_ape_percent": 9.562058314349054,
-      "coverage": 0.8623853211009175
-    },
-    {
-      "segment": "above_10_lakh",
-      "label": "Trên 10 lakh",
-      "n": 96,
-      "mae_inr": 311658.1906119198,
-      "rmse_inr": 462772.6241706888,
-      "r2": 0.7927661593394398,
-      "mape_percent": 17.692486113966936,
-      "median_ape_percent": 12.099312871694679,
-      "coverage": 0.78125
-    }
-  ],
   "median_baseline": {
-    "n": 1380,
     "mae_inr": 278026.3268115942,
     "rmse_inr": 512531.46038649406,
-    "r2": -0.06288916752762486,
-    "mape_percent": 74.91129176156406,
-    "median_ape_percent": 42.857142857142854
+    "r2": -0.06288916752762486
   },
   "features": [
     "year",
@@ -507,11 +133,11 @@
     "seller_type"
   ],
   "limitations": [
-    "Historical dataset through production year 2020; no listing observation dates or current-market prices.",
-    "Conformal 80% is nominal marginal coverage under exchangeability, not a per-car probability guarantee.",
-    "Grouped sampling, unobserved reposts and future distribution shift may affect interval coverage.",
-    "Calibration labels do not choose preprocessing, model, hyperparameters or ANN epochs.",
-    "Passenger classification is name/seats-based, not VIN-verified."
+    "Historical dataset; no verified current-market prices or individual listing dates.",
+    "One held-out grouped split is not a guarantee across future samples or unseen car models.",
+    "Grouping reduces duplicate leakage, but no VIN/listing ID exists to rule out all reposts.",
+    "No calibrated prediction intervals; test MAE is not a per-car error bound.",
+    "Rows with missing seats are kept only for recognized car makes; classification is name-based, not VIN-verified."
   ],
   "versions": {
     "scikit-learn": "1.8.0",

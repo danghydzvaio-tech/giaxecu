@@ -27,8 +27,8 @@
 .av-nav-brand { display: flex; align-items: center; gap: 9px; border-radius: 999px; }
 .av-brand-icon { width: 32px; height: 28px; }
 .av-brand-copy { display: flex; flex-direction: column; gap: 4px; white-space: nowrap; }
-.av-brand-name { font-size: 12px; font-weight: 700; letter-spacing: .11em; line-height: 1.3; }
-.av-brand-sub { font-size: 12px; letter-spacing: .16em; line-height: 1.2; max-height: 16px; opacity: 1; overflow: hidden; transition: max-height .3s var(--nav-ease), opacity .2s ease; }
+.av-brand-name { font-size: 10px; font-weight: 700; letter-spacing: .11em; line-height: 1.3; }
+.av-brand-sub { font-size: 8px; letter-spacing: .16em; line-height: 1.2; max-height: 12px; opacity: 1; overflow: hidden; transition: max-height .3s var(--nav-ease), opacity .2s ease; }
 .av-nav-links { position: relative; display: flex; align-items: center; gap: 2px; min-width: 0; }
 .av-nav-link {
   position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
@@ -57,7 +57,7 @@
   transform: translate(-50%, 5px); visibility: hidden; opacity: 0; pointer-events: none;
   padding: 7px 10px; border: 1px solid var(--nav-line); border-radius: 10px;
   background: rgba(58,44,31,.96); color: var(--nav-cream); box-shadow: var(--nav-shadow);
-  font-size: 12px; font-weight: 500; letter-spacing: .02em; line-height: 1.4; text-transform: none;
+  font-size: 10px; font-weight: 500; letter-spacing: .02em; line-height: 1.4; text-transform: none;
   transition: opacity .2s ease, transform .2s var(--nav-ease), visibility .2s ease;
 }
 .av-nav-link:hover .av-nav-tooltip, .av-nav-link:focus-visible .av-nav-tooltip {
@@ -93,7 +93,7 @@
 @media (min-width: 768px) and (max-width: 1023px) {
   .av-floating-nav { gap: 8px; padding-inline: 12px; max-width: calc(100% - 32px); }
   .av-brand-copy { max-width: 104px; white-space: normal; }
-  .av-brand-name { font-size: 12px; letter-spacing: .08em; }
+  .av-brand-name { font-size: 9px; letter-spacing: .08em; }
   .av-brand-sub { display: none; }
   .av-nav-brand { gap: 6px; }
   .av-brand-icon { width: 25px; }
@@ -110,9 +110,9 @@
   }
   .av-nav-brand, .stApp .av-floating-nav .av-nav-cta { display: none; }
   .av-nav-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; width: 100%; }
-  .av-nav-link { flex-direction: column; gap: 4px; min-height: 68px; padding: 6px 2px; border-radius: 20px; }
+  .av-nav-link { flex-direction: column; gap: 4px; min-height: 58px; padding: 6px 2px; border-radius: 20px; }
   .av-nav-icon { width: 21px; height: 21px; }
-  .av-nav-label { font-size: 12px; letter-spacing: 0; line-height: 1.2; white-space: normal; min-height: 29px; display: flex; align-items: center; justify-content: center; text-align: center; }
+  .av-nav-label { font-size: clamp(8.5px, 2.6vw, 11px); letter-spacing: .025em; line-height: 1.4; }
   .av-nav-indicator { border-radius: 20px; }
   .av-nav-link[aria-current="page"]::after { bottom: 1px; }
   .av-nav-tooltip { display: none; }

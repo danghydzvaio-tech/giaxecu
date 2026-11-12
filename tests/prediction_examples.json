@@ -13,12 +13,7 @@
       "power_bhp": 88.2,
       "seats": 5.0
     },
-    "expected_prediction_inr": 148363.84375,
-    "expected_interval_inr": {
-      "low": 116377.47826516992,
-      "central": 148363.84603984162,
-      "high": 189141.59636795547
-    }
+    "expected_prediction_inr": 148035.5807668111
   },
   {
     "inputs": {
@@ -34,12 +29,7 @@
       "power_bhp": 117.3,
       "seats": 5.0
     },
-    "expected_prediction_inr": 914314.6875,
-    "expected_interval_inr": {
-      "low": 717194.9509263348,
-      "central": 914314.6743907105,
-      "high": 1165612.3185871888
-    }
+    "expected_prediction_inr": 972563.6137888905
   },
   {
     "inputs": {
@@ -55,12 +45,7 @@
       "power_bhp": 121.3,
       "seats": 5.0
     },
-    "expected_prediction_inr": 999862.8125,
-    "expected_interval_inr": {
-      "low": 784299.551060924,
-      "central": 999862.8256979364,
-      "high": 1274673.1903814564
-    }
+    "expected_prediction_inr": 972093.8097775995
   },
   {
     "inputs": {
@@ -76,12 +61,7 @@
       "power_bhp": 67.1,
       "seats": 5.0
     },
-    "expected_prediction_inr": 332998.9375,
-    "expected_interval_inr": {
-      "low": 261206.59872179411,
-      "central": 332998.9304553043,
-      "high": 424523.22604038636
-    }
+    "expected_prediction_inr": 352949.93032410153
   },
   {
     "inputs": {
@@ -97,11 +77,6 @@
       "power_bhp": 94.68,
       "seats": 5.0
     },
-    "expected_prediction_inr": 594581.1875,
-    "expected_interval_inr": {
-      "low": 466393.65320291795,
-      "central": 594581.1937849277,
-      "high": 758000.796843681
-    }
+    "expected_prediction_inr": 645749.9541216352
   }
 ]

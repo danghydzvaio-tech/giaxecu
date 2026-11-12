@@ -2,7 +2,6 @@
 from pathlib import Path
 import base64
 import html
-import importlib
 import json
 
 import altair as alt
@@ -10,17 +9,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-try:
-    from service import load_assets, predict_vehicle, prediction_interval, historical_reference
-except ImportError:
-    # Community Cloud can retain the previous imported modules during a hot update.
-    import car_model
-    importlib.reload(car_model)
-    import service
-    importlib.reload(service)
-    from service import load_assets, predict_vehicle, prediction_interval, historical_reference
+from service import load_assets, predict_vehicle
 from photo_catalog import load_catalog, reference_car, photo_for_car
-from price_format import format_inr, format_price_units, indian_axis_expr
 
 ROOT = Path(__file__).resolve().parent
 PALETTE = {'brown': '#5B4632', 'deep': '#3A2C1F', 'cream': '#F4D9A0', 'orange': '#C8792C'}
@@ -28,17 +18,105 @@ st.set_page_config(page_title='AutoValue India · Định giá xe cũ', page_ico
 
 
 def load_css():
-    files = ['assets/theme.css', 'ui_effects.css', 'navbar.css']
-    css = '\n'.join((ROOT / filename).read_text(encoding='utf-8') for filename in files)
-    st.markdown('<style>' + css + '</style>', unsafe_allow_html=True)
+    st.markdown('''<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+    /* 01. Palette, page and typography */
+    :root{--brown:#5B4632;--deep:#3A2C1F;--cream:#F4D9A0;--orange:#C8792C;--button-ink:#281E15;--card:#473525;--field:var(--deep);--bg:var(--brown);--ink:var(--cream);--muted:var(--cream);--accent:var(--orange);--line:rgba(244,217,160,.42);--control-line:rgba(244,217,160,.65);--glow:rgba(200,121,44,.22);--shadow:rgba(40,30,21,.32);--gradient:linear-gradient(110deg,var(--cream),var(--orange));--title-font:'Cormorant Garamond',Georgia,'Times New Roman',serif;--page-glow:radial-gradient(ellipse at 92% 8%,rgba(200,121,44,.22),transparent 55%);--page-gradient:linear-gradient(135deg,var(--brown),var(--deep) 82%)}
+    html,body{background:var(--deep);color:var(--ink);color-scheme:dark}
+    .stApp{background:var(--page-glow),var(--page-gradient);color:var(--ink);font-family:Inter,sans-serif}
+    #MainMenu,footer,[data-testid="stHeader"]{display:none}
+    .block-container{max-width:1240px;padding:2rem 2rem 1rem}
+    h1,h2,h3{font-family:Sora,Inter,sans-serif;letter-spacing:-.02em;color:var(--ink)}
+    h2{font-size:1.6rem!important}h3{font-size:1.1rem!important}
+    p,li,[data-testid="stCaptionContainer"]{line-height:1.7}
+    [data-testid="stCaptionContainer"]{color:var(--muted);opacity:1}
+    a{color:var(--cream);text-decoration-color:var(--orange)}a:hover{color:var(--orange);background-color:var(--button-ink)}a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--cream)!important;outline-offset:4px}
+    .brandbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 24px;gap:16px;font-size:11px;letter-spacing:.15em;font-weight:700}
+    .brandbar{background:var(--brown);color:var(--cream)}.brandbar span{color:var(--muted);letter-spacing:.1em;font-weight:500}.brand-dot{color:var(--cream)}
+    /* 02. Hero: CSS-only motion, no JavaScript or animation CDN */
+    .hero{display:grid;grid-template-columns:1.05fr 1fr;gap:32px;align-items:center;position:relative;overflow:hidden;isolation:isolate;border:1px solid var(--line);border-radius:28px;padding:44px;background:radial-gradient(ellipse at 100% 0%,rgba(200,121,44,.1),transparent 65%),var(--deep);animation:appear .6s ease both}
+    .hero:before{content:'';position:absolute;z-index:-1;left:30%;top:-100px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(244,217,160,.06),transparent 70%);animation:drift 25s ease-in-out infinite alternate;pointer-events:none}
+    .eyebrow{font-size:10px;letter-spacing:.17em;color:var(--cream);font-weight:700;margin:0 0 18px}
+    .hero h1{font-family:var(--title-font);font-size:clamp(32px,3.7vw,52px);font-weight:700;line-height:1.2;margin:0 0 20px;padding:0;text-shadow:0 2px 18px rgba(244,217,160,.1)}
+    .hero h1,.gradient{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}
+    .hero p{font-size:14px;color:var(--muted);margin:0 0 22px;max-width:470px}
+    .badges{display:flex;flex-wrap:wrap;gap:8px}.badge{font-size:10px;color:var(--cream);background:transparent;border:1px solid var(--line);border-radius:100px;padding:7px 10px}
+    .hero-image{margin:0;animation:float 7s ease-in-out infinite}.hero-image img{display:block;width:100%;height:clamp(240px,26vw,360px);object-fit:cover;object-position:53% center;border-radius:20px;border:1px solid var(--line);box-shadow:0 24px 60px var(--shadow)}.hero-image figcaption{font-size:9px;color:var(--muted);margin:10px 0 0;text-align:right}.hero-image a{color:var(--cream)}.hero-image a:hover{color:var(--orange)}
+    .scope{font-size:12px;color:var(--muted);margin:18px 2px 24px}
+    /* 03. Tabs and cards */
+    [data-baseweb="tab-list"]{gap:24px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+    button[data-baseweb="tab"]{font-family:Inter,sans-serif;white-space:nowrap;height:52px;color:var(--muted);padding:0 4px}
+    [role="tab"][aria-selected="true"]{color:var(--cream)!important}
+    [data-baseweb="tab-highlight"]{height:3px;background:var(--gradient);border-radius:8px}
+    .st-key-input-card,.st-key-result-card,.st-key-reference-card,.st-key-about-card{padding:28px;border:1px solid var(--line);background:linear-gradient(150deg,var(--card),var(--deep));border-radius:20px;box-shadow:0 16px 50px var(--shadow);animation:appear .45s ease both}
+    .st-key-result-card{margin-top:24px;border-color:var(--orange);animation-delay:.1s}
+    .section-kicker{font-size:10px;letter-spacing:.15em;font-weight:700;color:var(--cream);margin:0 0 8px}
+    .card-intro{color:var(--muted);font-size:13px;margin:0 0 20px}
+    .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0 24px}
+    .mini-card{padding:20px;background:var(--deep);border:1px solid var(--line);border-radius:16px;transition:transform .2s,box-shadow .2s,border-color .2s}
+    .mini-card:hover{transform:translateY(-6px);border-color:var(--orange);box-shadow:0 16px 36px var(--shadow)}
+    .mini-card small{display:block;color:var(--muted);font-size:11px;margin-bottom:10px}.mini-card strong{font-family:Sora,sans-serif;font-size:clamp(17px,2vw,24px);color:var(--ink)}
+    /* 04. Accessible native input controls */
+    [data-testid="stForm"]{border:0;padding:0}
+    [data-testid="stWidgetLabel"] p{font-size:12px;color:var(--cream);font-weight:500}
+    [data-testid="stNumberInputContainer"],[data-baseweb="select"]>div,[data-testid="stSelectbox"] [role="group"]{border-radius:12px!important;background:var(--field)!important;border-color:var(--control-line)!important;transition:border-color .2s,box-shadow .2s}
+    [data-testid="stNumberInputContainer"]:focus-within,[data-baseweb="select"]:focus-within>div,[data-testid="stSelectbox"] [role="group"]:focus-within{border-color:var(--cream)!important;box-shadow:0 0 0 3px var(--glow)}
+    [data-testid="stNumberInputContainer"]{min-height:48px}
+    [data-testid="stSelectbox"] input[role="combobox"]{min-height:46px}
+    [data-testid="stExpander"]{border-radius:14px;border-color:var(--line);background:var(--deep)}
+    [data-testid="stFormSubmitButton"] button{min-height:54px;width:100%;border:1px solid var(--cream);border-radius:999px;background:transparent;color:var(--cream);font-weight:700;transition:transform .2s,box-shadow .2s,background-color .2s,color .2s}
+    [data-testid="stFormSubmitButton"] button:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--glow);background:var(--orange);color:var(--button-ink);border-color:var(--cream)}
+    [data-testid="stFormSubmitButton"] button:active{transform:scale(.98)}
+    [data-testid="stDownloadButton"] button,[data-testid="stButton"] button{border-radius:999px;min-height:44px;border:1px solid var(--cream);background:transparent;color:var(--cream)}
+    [data-testid="stDownloadButton"] button:hover,[data-testid="stButton"] button:hover{background:var(--orange);color:var(--button-ink);border-color:var(--cream)}
+    [data-testid="stAlert"]{border-radius:14px;border:1px solid var(--line);background:var(--deep);color:var(--cream)}
+    /* 05. Result and historical reference range */
+    .estimate{padding:26px;border:1px solid var(--line);background:radial-gradient(ellipse at 100% 0%,var(--glow),transparent 65%),var(--deep);border-radius:18px;margin:12px 0 18px}
+    .estimate .label{color:var(--cream);font-size:12px}.price{font-family:Sora,sans-serif;font-size:clamp(48px,6vw,80px);line-height:1.2;font-weight:700;letter-spacing:-.04em;color:var(--cream);overflow-wrap:anywhere;margin:14px 0}.estimate .unit{font-size:12px;color:var(--muted)}
+    [data-testid="stMetric"]{background:var(--deep);padding:18px;border:1px solid var(--line);border-radius:14px}[data-testid="stMetricValue"]{font-family:Sora,sans-serif;font-size:24px;color:var(--cream)}
+    .range-track{height:10px;background:var(--gradient);border-radius:10px;margin:18px 0 10px}.range-ends{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--cream)}
+    .page-footer{border-top:1px solid var(--line);margin:40px 0 0;padding:24px 0;background:var(--brown);color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    /* Vehicle gallery: keep the verified photos and their historical records. */
+    .sample-gallery{margin:28px 0 32px}.sample-gallery h2{margin:0 0 8px}.sample-intro{font-size:13px;color:var(--muted);max-width:760px;margin:0 0 20px}
+    .sample-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+    .sample-car{overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--card);transition:transform .2s,border-color .2s,box-shadow .2s}
+    .sample-car:hover{transform:translateY(-6px);border-color:var(--orange);box-shadow:0 16px 36px var(--shadow)}
+    .sample-car>img{display:block;width:100%;height:190px;object-fit:cover;background:var(--deep)}
+    .sample-body{padding:20px}.sample-car h3{font-size:16px!important;line-height:1.5;margin:0 0 8px;padding:0}.sample-meta{font-size:12px;color:var(--muted);margin:0 0 12px}
+    .sample-price{font-family:Sora,sans-serif;font-size:25px;font-weight:600;color:var(--cream)}.sample-price-label{font-size:10px;color:var(--muted);margin-top:4px}
+    .sample-car details{margin-top:16px;font-size:11px;color:var(--muted);line-height:1.7}.sample-car summary{cursor:pointer;color:var(--cream)}.sample-car details p{margin:8px 0 0}.sample-car details a{color:var(--cream)}.sample-car details a:hover{color:var(--orange)}
+    /* Theme native Streamlit controls and their portalled dropdowns as well. */
+    [data-testid="stAppViewContainer"],[data-testid="stMain"]{background:transparent}
+    .stApp :is(p,li,h2,h3,label,summary),[data-testid="stCaptionContainer"],[data-testid="stMetricLabel"]{color:var(--cream)}
+    .brandbar,.eyebrow,.section-kicker,.hero p,.scope,.sample-intro,.card-intro,.sample-meta,.sample-price-label,.page-footer{ text-transform:uppercase;letter-spacing:.08em }
+    [role="tab"] p{font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    [role="tab"]:hover{color:var(--cream);background:var(--deep)}
+    [role="tab"] .react-aria-SelectionIndicator{background:var(--gradient)}
+    [data-testid="stNumberInputContainer"] input,[data-testid="stSelectbox"] input,[data-baseweb="select"] input{background:transparent!important;color:var(--cream)!important;caret-color:var(--cream);-webkit-text-fill-color:var(--cream)}
+    [data-testid="stNumberInputContainer"] button,[data-testid="stSelectbox"] button{color:var(--cream);background:transparent}
+    [data-testid="stNumberInputContainer"] button:hover,[data-testid="stSelectbox"] button:hover{color:var(--button-ink);background:var(--orange)}
+    [role="listbox"],[data-baseweb="popover"]>div{background:var(--deep)!important;color:var(--cream)!important;border-color:var(--line)!important}
+    [role="option"]{background:var(--deep)!important;color:var(--cream)!important}
+    [role="option"]:hover,[role="option"][aria-selected="true"],[role="option"][data-focused="true"]{background:var(--orange)!important;color:var(--button-ink)!important}
+    [data-testid="stFormSubmitButton"] button p,[data-testid="stDownloadButton"] button p,[data-testid="stButton"] button p{color:inherit}
+    [data-testid="stTooltipIcon"]{color:var(--cream)}[data-testid="stTooltipIcon"]:hover{color:var(--orange)}
+    [role="tooltip"],[data-testid="stTooltipContent"]{background:var(--button-ink)!important;color:var(--cream)!important}
+    [data-testid="stAlert"] [data-testid="stMarkdownContainer"],[data-testid="stAlert"] svg{color:var(--cream)}
+    .hero-image a:hover,.sample-car details a:hover,.page-footer a:hover{background:var(--button-ink)}
+    ::selection{background:var(--orange);color:var(--button-ink)}
+    @media(forced-colors:active){.hero h1,.gradient{background:none;color:CanvasText;text-shadow:none}}
+    @media(max-width:1000px){.sample-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.sample-grid{grid-template-columns:1fr}.sample-car>img{height:210px}}
+    /* 06. Motion and small screens */
+    @keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    @keyframes float{50%{transform:translateY(-6px)}}@keyframes drift{to{transform:translate(70px,90px)}}
+    @media(max-width:760px){.block-container{padding:1.2rem 1rem}.hero{grid-template-columns:1fr;padding:24px;gap:24px}.hero h1{font-size:36px}.hero-image img{height:200px;aspect-ratio:16/9}.brandbar{font-size:10px}.brandbar span{font-size:9px}.st-key-input-card,.st-key-result-card,.st-key-reference-card,.st-key-about-card{padding:20px}.mini-grid{grid-template-columns:1fr}.mini-card{padding:16px}.mini-card strong{font-size:22px}[data-baseweb="tab-list"]{gap:14px}.price{font-size:clamp(38px,10vw,60px)}.estimate{padding:18px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    ''' + (ROOT / 'ui_effects.css').read_text(encoding='utf-8') + (ROOT / 'navbar.css').read_text(encoding='utf-8') + '</style>', unsafe_allow_html=True)
 
 
 def money(value):
-    return format_inr(value)
-
-
-def percent(value):
-    return f'{value:.1f}'.replace('.', ',') + '%'
+    return f'₹{value:,.0f}'
 
 
 def clear_result():
@@ -46,16 +124,16 @@ def clear_result():
 
 
 @st.cache_resource
-def assets(manifest_version):
-    # A regenerated manifest also invalidates the cached model after deployment.
+def assets():
     return load_assets(ROOT)
 
 
 @st.cache_data(show_spinner=False)
 def hero_photo():
-    photo = next(p for p in load_catalog()['photos'] if p['id'] == load_catalog()['hero'])
-    path = ROOT / 'static/cars' / photo['filename']
-    return 'data:image/webp;base64,' + base64.b64encode(path.read_bytes()).decode('ascii')
+    path = ROOT / 'static/cars/—Pngtree—black bmw car in close-up_15181512.png'
+    if not path.is_file():
+        return ''
+    return 'data:image/png;base64,' + base64.b64encode(path.read_bytes()).decode('ascii')
 
 
 @st.cache_data(show_spinner=False, max_entries=16)
@@ -92,25 +170,20 @@ def show_sample_gallery(reference):
 load_css()
 st.markdown((ROOT / 'navbar.html').read_text(encoding='utf-8'), unsafe_allow_html=True)
 image = hero_photo()
-hero = next(p for p in load_catalog()['photos'] if p['id'] == load_catalog()['hero'])
-art = ('<figure class="hero-image"><img src="' + image + '" alt="' + html.escape(hero['photo_name'], quote=True) + '" width="' + str(hero['width']) + '" height="' + str(hero['height']) + '">'
-       '<figcaption>Ảnh: ' + html.escape(hero['author']) + ' · <a href="' + html.escape(hero['source_page'], quote=True) + '" target="_blank" rel="noopener noreferrer">Nguồn ảnh</a> · <a href="' + html.escape(hero['license_url'], quote=True) + '" target="_blank" rel="noopener noreferrer">' + html.escape(hero['license']) + '</a></figcaption></figure>')
+art = ('<figure class="hero-image"><img src="' + image + '" alt="Cận cảnh xe BMW màu đen" width="2912" height="1632">'
+       '<figcaption>Ảnh minh họa · <a href="https://vi.pngtree.com/freebackground/black-bmw-car-in-close-up-photo-photo_15181512.html" target="_blank" rel="noopener noreferrer">Pngtree</a></figcaption></figure>') if image else ''
 st.markdown('<section class="hero"><div>'
             '<h1>Dự đoán giá xe<br><span class="gradient">bằng thuật toán AI</span></h1>'
             '<p>Chọn phiên bản, kiểm tra thông số và nhận giá tham khảo bằng mô hình AI đã được huấn luyện sẵn.</p>'
-            '<div class="badges"><span class="badge">✦ Mô hình AI</span><span class="badge">◉ Dữ liệu CarDekho</span><span class="badge">↗ Kết quả bằng INR</span></div></div>' + art + '</section>', unsafe_allow_html=True)
-st.markdown('<p class="scope">Giá tham khảo thị trường xe cũ Ấn Độ (INR), dựa trên dữ liệu lịch sử CarDekho đến năm 2020, không phải giá rao bán hiện tại.</p>', unsafe_allow_html=True)
+            '<div class="badges"><span class="badge">✦ Mô hình ANN</span><span class="badge">◉ Dữ liệu CarDekho</span><span class="badge">↗ Kết quả bằng INR</span></div></div>' + art + '</section>', unsafe_allow_html=True)
+st.markdown('<p class="scope">Giá lịch sử tại Ấn Độ · 1 lakh = ₹100.000 · Không phải giá thị trường Việt Nam hoặc giá giao dịch hiện tại.</p>', unsafe_allow_html=True)
 try:
-    manifest_version = (ROOT / 'artifacts/manifest.json').read_text(encoding='utf-8')
-    bundle, reference = assets(manifest_version)
+    bundle, reference = assets()
 except (OSError, ValueError, KeyError):
     st.error('Không thể nạp mô hình. Hãy kiểm tra đầy đủ thư mục artifacts/ theo README của dự án.')
     st.stop()
 report = bundle['report']
-if st.session_state.get('model_manifest') != manifest_version:
-    clear_result()
-    st.session_state.model_manifest = manifest_version
-model_label = report['selected_model']['label']
+show_sample_gallery(reference)
 BRAND_LABELS = {'bmw': 'BMW', 'mg': 'MG', 'land': 'Land Rover'}
 FUEL_LABELS = {'petrol': 'Xăng', 'diesel': 'Dầu diesel', 'cng': 'Khí CNG', 'lpg': 'Khí LPG'}
 GEAR_LABELS = {'manual': 'Số sàn', 'automatic': 'Số tự động'}
@@ -163,9 +236,7 @@ with st.container(key='valuation-section'):
         try:
             with st.spinner('Đang đối chiếu thông số và ước tính giá xe…'):
                 price, notes, matching = predict_vehicle(bundle, reference, row)
-                interval_low, price, interval_high = prediction_interval(bundle, row)
-            st.session_state.valuation_result = dict(row=row, price=price, notes=notes, matching=matching,
-                                                     interval_low=interval_low, interval_high=interval_high)
+            st.session_state.valuation_result = dict(row=row, price=price, notes=notes, matching=matching)
         except ValueError as exc:
             st.error(str(exc))
     result = st.session_state.get('valuation_result')
@@ -176,24 +247,18 @@ with st.container(key='valuation-section'):
             st.subheader('Giá tham khảo của bạn')
             st.write(f"**{r['name'].title()} · {r['year']} · {r['km_driven']:,} km**")
             st.caption('Kết quả cho thông số ở lần bấm Dự đoán gần nhất. Bấm lại sau khi chỉnh thông số.')
-            st.markdown(f'<div class="estimate"><div class="label">GIÁ DỰ ĐOÁN · INR</div><div class="price">{money(price)}</div><div class="unit">Ước tính bằng {html.escape(model_label)}</div></div>', unsafe_allow_html=True)
-            st.markdown(f'**Khoảng {money(result["interval_low"])} – {money(result["interval_high"])} · độ tin cậy mục tiêu 80%**')
-            st.caption(f'Split conformal trên dữ liệu lịch sử; độ phủ thực tế trên tập kiểm tra: {percent(report["conformal"]["test_coverage"] * 100)}. Mức phủ này không bảo đảm riêng cho từng chiếc xe.')
-            st.metric('Tương đương', format_price_units(price))
-            st.caption('1 lakh = ₹1,00,000; 1 crore = 100 lakh')
+            st.markdown(f'<div class="estimate"><div class="label">GIÁ DỰ ĐOÁN · INR</div><div class="price">{money(price)}</div><div class="unit">{price / 100_000:.2f} lakh · Ước tính bằng mô hình ANN</div></div>', unsafe_allow_html=True)
+            a, b = st.columns(2)
+            a.metric('Giá dự đoán', money(price))
+            b.metric('Tương đương', f'{price / 100_000:.2f} lakh')
             for note in result['notes']:
                 st.warning(note)
-            st.caption(f'Sai số phần trăm tuyệt đối trung bình (MAPE): {percent(report["test"]["mape_percent"])}; trung vị: {percent(report["test"]["median_ape_percent"])} trên tập kiểm tra.')
+            st.caption(f"Sai số tuyệt đối trung bình trên tập kiểm tra: khoảng {money(report['ann']['mae_inr'])}. Đây không phải biên sai số bảo đảm cho chiếc xe này.")
             with st.expander('Khoảng giá của các mẫu lịch sử cùng cấu hình'):
-                nearby, fallback = historical_reference(matching, r['year'])
-                low, high = float(nearby.selling_price.min()), float(nearby.selling_price.max())
-                domain_low, domain_high = min(low, price), max(high, price)
-                span = max(domain_high - domain_low, 1.0)
-                start, band, marker = (low - domain_low) / span * 100, (high - low) / span * 100, (price - domain_low) / span * 100
-                st.markdown(f'<div class="history-track" role="img" aria-label="Khoảng giá lịch sử {money(low)} đến {money(high)}; vạch giá dự đoán {money(price)}"><i style="left:{start:.3f}%;width:{band:.3f}%"></i><b style="left:{marker:.3f}%"></b></div><div class="range-ends"><span>Thấp nhất lịch sử<br><b>{money(low)}</b></span><span>Giá dự đoán<br><b>{money(price)}</b></span><span>Cao nhất lịch sử<br><b>{money(high)}</b></span></div>', unsafe_allow_html=True)
-                st.caption(f'{len(nearby):,} mẫu cùng phiên bản, nhiên liệu và hộp số. ' + ('Có dưới 5 mẫu trong khoảng ±2 năm; đang dùng toàn bộ các năm của cấu hình này.' if fallback else 'Chỉ lấy năm sản xuất trong khoảng ±2 năm so với xe nhập vào.'))
-                st.caption('Dải màu là giá lịch sử, vạch sáng là giá dự đoán; đây là phần đối chiếu riêng với khoảng dự đoán conformal phía trên.')
-            download = pd.DataFrame([{'Xe': r['name'].title(), 'Nam_san_xuat': r['year'], 'Km': r['km_driven'], 'Gia_du_doan_INR': round(price), 'Khoang_thap_INR': round(result['interval_low']), 'Khoang_cao_INR': round(result['interval_high']), 'Muc_phu_muc_tieu': .8, 'Don_vi': 'INR', 'Ghi_chu': 'Uoc tinh theo du lieu CarDekho lich su'}])
+                low, high = matching.selling_price.min(), matching.selling_price.max()
+                st.markdown(f'<div class="range-track" aria-hidden="true"></div><div class="range-ends"><span>Thấp nhất<br><b>{money(low)}</b></span><span>Cao nhất<br><b>{money(high)}</b></span></div>', unsafe_allow_html=True)
+                st.caption(f'{len(matching):,} mẫu cùng phiên bản, nhiên liệu và hộp số, có thể khác năm và tình trạng. Đây không phải khoảng dự đoán hoặc mức độ tin cậy.')
+            download = pd.DataFrame([{'Xe': r['name'].title(), 'Nam_san_xuat': r['year'], 'Km': r['km_driven'], 'Gia_du_doan_INR': round(price), 'Don_vi': 'INR', 'Ghi_chu': 'Uoc tinh theo du lieu CarDekho lich su'}])
             a, b = st.columns(2)
             a.download_button('↓ Tải kết quả CSV', download.to_csv(index=False).encode('utf-8-sig'), 'ket_qua_gia_xe.csv', 'text/csv', on_click='ignore', width='stretch')
             b.button('↻ Dự đoán lại', on_click=clear_result, width='stretch', help='Ẩn kết quả hiện tại; giữ các thông số để bạn chỉnh và dự đoán tiếp.')
@@ -204,38 +269,30 @@ with st.container(key='valuation-section'):
                     st.markdown(f"Ảnh: {photo['author']} · [Nguồn]({photo['source_page']}) · [{photo['license']}]({photo['license_url']})")
                 examples = matching.copy()
                 examples['distance'] = abs(examples.year - r['year']) + abs(examples.km_driven - r['km_driven']) / 20_000
-                shown = examples.sort_values('distance').head(5)[['year', 'km_driven', 'selling_price']].rename(columns={'year': 'Năm', 'km_driven': 'Số km', 'selling_price': 'Giá nguồn (₹)'})
-                st.dataframe(shown.style.format({'Giá nguồn (₹)': money}), hide_index=True, width='stretch')
+                st.dataframe(examples.sort_values('distance').head(5)[['year', 'km_driven', 'selling_price']].rename(columns={'year': 'Năm', 'km_driven': 'Số km', 'selling_price': 'Giá nguồn (₹)'}), hide_index=True, width='stretch')
                 st.caption('Bản ghi lịch sử từ tập huấn luyện, không phải tin rao đang bán.')
-
-# A stateful expander skips generating image bytes until the user opens it.
-gallery = st.expander('Những chiếc xe trong dữ liệu', expanded=False, key='gallery', on_change='rerun')
-if gallery.open:
-    with gallery:
-        show_sample_gallery(reference)
 
 with st.container(key='reference-section'):
     with st.container(key='reference-card'):
         st.markdown('<p class="section-kicker">GÓC NHÌN TỪ DỮ LIỆU LỊCH SỬ</p>', unsafe_allow_html=True)
         st.subheader('Hiểu dữ liệu trước khi đọc mức giá')
         st.caption('Tất cả biểu đồ dùng tập huấn luyện CarDekho tại Ấn Độ. Không phải thống kê thị trường hiện tại.')
-        cards = [('Mẫu ô tô sau xử lý', f"{report['cleaning']['usable_rows']:,}"), ('Mẫu kiểm tra độc lập', f"{report['split']['test_rows']:,}"), ('MAPE · tập kiểm tra', percent(report['test']['mape_percent']))]
+        cards = [('Mẫu ô tô sau xử lý', f"{report['cleaning']['usable_rows']:,}"), ('Mẫu kiểm tra độc lập', f"{report['split']['test_rows']:,}"), ('Sai số trung bình · tập kiểm tra', money(report['ann']['mae_inr']))]
         st.markdown('<div class="mini-grid">' + ''.join(f'<div class="mini-card"><small>{label}</small><strong>{value}</strong></div>' for label, value in cards) + '</div>', unsafe_allow_html=True)
         st.markdown('### Giá trung vị theo năm sản xuất')
         st.caption(f'{name.title()} · {FUEL_LABELS.get(pair[0], pair[0])} · {GEAR_LABELS.get(pair[1], pair[1])}. Mỗi điểm là trung vị các mẫu lịch sử, không phải dự báo khấu hao của một chiếc xe.')
         trend = profile.groupby('year', as_index=False).agg(price=('selling_price', 'median'), samples=('selling_price', 'size'))
         if len(trend) >= 2:
             plot = trend.rename(columns={'year': 'Năm sản xuất', 'price': 'Giá trung vị (INR)'})[['Năm sản xuất', 'Giá trung vị (INR)']]
-            plot['Giá hiển thị'] = plot['Giá trung vị (INR)'].map(money)
             # Preserve Streamlit's line/hover/zoom behavior; format only the year.
             base = alt.Chart(plot, width=0, height=280).mark_line().encode(
                 x=alt.X('Năm sản xuất:Q', title='Năm sản xuất', scale=alt.Scale(),
                         axis=alt.Axis(grid=False, tickMinStep=1, format='d')),
                 y=alt.Y('Giá trung vị (INR):Q', title='Giá trung vị (INR)',
-                        scale=alt.Scale(), axis=alt.Axis(grid=True, labelExpr=indian_axis_expr())),
+                        scale=alt.Scale(), axis=alt.Axis(grid=True)),
                 color=alt.value(PALETTE['orange']),
                 tooltip=[alt.Tooltip('Năm sản xuất:Q', format='d'),
-                         alt.Tooltip('Giá hiển thị:N', title='Giá trung vị (INR)')],
+                         alt.Tooltip('Giá trung vị (INR):Q')],
             )
             nearest = alt.selection_point(nearest=True, on='mousemove',
                                           fields=['Năm sản xuất'], empty=False, clear='mouseleave')
@@ -247,8 +304,7 @@ with st.container(key='reference-section'):
             st.altair_chart(chart, width='stretch', height=280)
         else:
             st.info('Cấu hình này chưa có đủ năm sản xuất để vẽ đường giá. Xem các mẫu trong bảng bên dưới.')
-        shown_trend = trend.rename(columns={'year': 'Năm sản xuất', 'price': 'Giá trung vị (INR)', 'samples': 'Số mẫu'})
-        st.dataframe(shown_trend.style.format({'Giá trung vị (INR)': money}), hide_index=True, width='stretch')
+        st.dataframe(trend.rename(columns={'year': 'Năm sản xuất', 'price': 'Giá trung vị (INR)', 'samples': 'Số mẫu'}), hide_index=True, width='stretch')
         st.markdown('### Số mẫu tham chiếu theo nhiên liệu')
         fuels = reference.fuel.map(lambda x: FUEL_LABELS.get(x, x)).value_counts().rename_axis('Nhiên liệu').reset_index(name='Số mẫu')
         st.bar_chart(fuels, x='Nhiên liệu', y='Số mẫu', horizontal=True, color=PALETTE['cream'], height=240)
@@ -258,16 +314,14 @@ with st.container(key='about-section'):
     with st.container(key='about-card'):
         st.markdown('<p class="section-kicker">MINH BẠCH VỀ PHẠM VI SỬ DỤNG</p>', unsafe_allow_html=True)
         st.subheader('AI hỗ trợ tham khảo. Bạn quyết định.')
-        st.write(f'Mô hình {model_label} được chọn bằng GroupKFold 5 lần giữa MLPRegressor, RandomForestRegressor và HistGradientBoostingRegressor trên phần dữ liệu huấn luyện. Tập validation được giữ riêng cho hiệu chỉnh conformal; tập kiểm tra chỉ dùng để báo cáo cuối. Dữ liệu là Car details v3.csv trên Kaggle.')
-        st.write('Website dùng mô hình đã huấn luyện sẵn. Thông số gợi ý là trung vị các mẫu cùng cấu hình; khi thiếu thì dùng trung vị tập huấn luyện.')
-        st.write(f"Chỉ hỗ trợ các phiên bản có trong dữ liệu, năm sản xuất {report['cleaning']['year_min']}–{report['cleaning']['year_max']}. Giá bằng rupee Ấn Độ (INR); 1 lakh = ₹1,00,000; 1 crore = 100 lakh.")
-        st.warning('Giá chưa tính tình trạng thực tế, tai nạn/ngập nước hoặc biến động thị trường. Không dùng kết quả này như báo giá giao dịch hiện tại.')
-        st.write(f'Khoảng dự đoán được hiệu chỉnh bằng split conformal trên phần dư log của tập validation, với mục tiêu phủ 80%. Độ phủ đo được trên tập kiểm tra là {percent(report["conformal"]["test_coverage"] * 100)}; mức này áp dụng cho tổng thể dữ liệu tương tự, không phải xác suất bảo đảm cho từng xe hoặc từng hãng.')
+        st.write('Mô hình ANN được huấn luyện sẵn từ Car details v3.csv trên Kaggle. Website không yêu cầu tải dữ liệu hoặc huấn luyện lại. Thông số gợi ý là trung vị các mẫu cùng cấu hình; khi thiếu thì dùng trung vị tập huấn luyện.')
+        st.write(f"Chỉ hỗ trợ các phiên bản có trong dữ liệu, năm sản xuất {report['cleaning']['year_min']}–{report['cleaning']['year_max']}. Giá bằng rupee Ấn Độ (INR); 1 lakh = ₹100.000.")
+        st.warning('Giá chưa tính tình trạng thực tế, tai nạn/ngập nước hoặc biến động thị trường. Không dùng kết quả này như báo giá giao dịch hoặc định giá xe tại Việt Nam.')
+        st.write('Mô hình hiện chưa có khoảng dự đoán được hiệu chỉnh, điểm tin cậy cho từng xe hoặc phân tích mức ảnh hưởng riêng của từng yếu tố. Vì vậy ứng dụng không hiển thị các chỉ số này.')
         st.markdown('[Nguồn: Nehal Birla · CarDekho trên Kaggle](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho) · [Giấy phép dữ liệu ODbL](https://opendatacommons.org/licenses/odbl/1.0/)')
 
 st.markdown('<div class="page-footer"><span class="founder-credit">Người sáng lập: Trần Đăng Huy</span><span><a href="https://github.com/danghydzvaio-tech/giaxecu" target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Giá trị tham khảo từ dữ liệu lịch sử</span></div>', unsafe_allow_html=True)
 
-# One zero-height bootstrap for our trusted scripts; each controller reuses its
-# observers across reruns. st.html sanitizes scripts in the deployed frontend.
+# Run our own JavaScript in the app document, including after Streamlit reruns.
 effects = json.dumps((ROOT / 'ui_effects.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'navbar.js').read_text(encoding='utf-8')).replace('</', '<\\/')
-components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-2"&&p.__avNav?.version==="nav-1"){p.__avGlass.refresh();p.__avNav.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);s.remove();}</script>', height=0, scrolling=False)
+components.html('<script>const p=window.parent;if(p.__avGlass?.version==="glass-1"&&p.__avNav?.version==="nav-1"){p.__avGlass.refresh();p.__avNav.refresh();}else{const s=p.document.createElement("script");s.textContent=' + effects + ';p.document.body.appendChild(s);}</script>', height=0, scrolling=False)

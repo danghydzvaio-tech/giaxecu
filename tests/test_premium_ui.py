@@ -4,14 +4,6 @@ import unittest
 from streamlit.testing.v1 import AppTest
 ROOT = Path(__file__).resolve().parents[1]
 class PremiumUITests(unittest.TestCase):
-    def test_gallery_bytes_are_generated_only_when_opened(self):
-        app = AppTest.from_file(str(ROOT / 'app.py'), default_timeout=45).run()
-        self.assertFalse(app.exception)
-        self.assertFalse(any('<article class="sample-car">' in md.value for md in app.markdown))
-        app.session_state['gallery'] = True
-        app.run()
-        self.assertFalse(app.exception)
-        self.assertTrue(any('<article class="sample-car">' in md.value for md in app.markdown))
     def test_result_survives_rerun_and_can_be_cleared(self):
         app = AppTest.from_file(str(ROOT / 'app.py'), default_timeout=45).run()
         app.button[0].click().run()
