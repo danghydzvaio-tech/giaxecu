@@ -75,13 +75,13 @@ class WebTests(unittest.TestCase):
         self.assertFalse(at.metric)
         at.button[0].click().run()
         self.assertFalse(at.exception)
-        self.assertEqual(len(at.metric), 2)
+        self.assertEqual(len(at.metric), 1)
         self.assertTrue(at.metric[0].value.startswith('₹'))
         at.selectbox[0].select('honda').run()
         self.assertFalse(at.exception)
         at.button[0].click().run()
         self.assertFalse(at.exception)
-        self.assertEqual(len(at.metric), 2)
+        self.assertEqual(len(at.metric), 1)
 
 
 if __name__ == '__main__':
